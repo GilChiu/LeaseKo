@@ -15,7 +15,7 @@ Establish a secure, multi-tenant SaaS foundation with authentication, database, 
 As a developer, I want a monorepo setup so that frontend and backend are managed together.
 
 ### Tasks
-- [ ] Initialize monorepo (pnpm/turborepo)
+- [/] Initialize monorepo (pnpm/turborepo)
 - [ ] Setup Next.js app
 - [ ] Setup NestJS app
 - [ ] Configure shared tsconfig and eslint
