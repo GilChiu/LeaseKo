@@ -32,7 +32,7 @@ services:
     restart: unless-stopped
 
   adminer:
-    image: adminer:latest
+    image: adminer:4
     container_name: leaseKo-adminer
     ports:
       - "8080:8080"

@@ -21,8 +21,8 @@ As a developer, I want a monorepo setup so that frontend and backend are managed
 - [/] Initialize monorepo (pnpm/turborepo)
 - [/] Setup Next.js app
 - [/] Setup NestJS app
-- [ ] Configure shared tsconfig and eslint
-- [ ] Setup environment variables
+- [/] Configure shared tsconfig and eslint
+- [/] Setup environment variables
 
 ---
 
