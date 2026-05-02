@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 
 export default function HomePage() {
   return (
@@ -11,12 +12,26 @@ export default function HomePage() {
           Multi-tenant Property Management SaaS
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center justify-center rounded-md bg-slate-900 px-6 py-3 text-sm font-medium text-white hover:bg-slate-700 transition-colors"
-          >
-            Go to Dashboard
-          </Link>
+          <SignedOut>
+            <SignInButton mode="redirect">
+              <button className="inline-flex items-center justify-center rounded-md bg-slate-900 px-6 py-3 text-sm font-medium text-white hover:bg-slate-700 transition-colors">
+                Sign In
+              </button>
+            </SignInButton>
+            <SignUpButton mode="redirect">
+              <button className="inline-flex items-center justify-center rounded-md border border-slate-300 px-6 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+                Sign Up
+              </button>
+            </SignUpButton>
+          </SignedOut>
+          <SignedIn>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center justify-center rounded-md bg-slate-900 px-6 py-3 text-sm font-medium text-white hover:bg-slate-700 transition-colors"
+            >
+              Go to Dashboard
+            </Link>
+          </SignedIn>
           <a
             href="http://localhost:3001/api/docs"
             target="_blank"

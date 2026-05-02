@@ -148,9 +148,48 @@ docker compose -f infra/docker-compose.yml --env-file infra/.env.docker logs -f 
 
 | Feature     | Description                                                                                                       |
 | ----------- | ----------------------------------------------------------------------------------------------------------------- |
-| Feature 007 | Prisma ORM — `DATABASE_URL` connects Prisma to PostgreSQL; run `prisma migrate dev` to apply schema               |
 | Feature 008 | BullMQ Queues — `REDIS_URL` connects queue workers to Redis; every job payload must include `tenantId` + `userId` |
-| Feature 009 | Clerk Auth — hosted service; requires `CLERK_SECRET_KEY` + `CLERK_JWKS_URL` in `apps/api/.env`                    |
+| Feature 009 | Clerk NestJS Auth — requires `CLERK_SECRET_KEY` + `CLERK_JWKS_URL` in `apps/api/.env` to verify JWTs from frontend |
+
+## Clerk Authentication
+
+The frontend uses `@clerk/nextjs` v5 for sign-up, sign-in, and route protection.
+
+### Setup
+
+1. Create an application at https://dashboard.clerk.com
+2. Copy environment variables:
+
+```bash
+cp apps/web/.env.example apps/web/.env.local
+```
+
+3. Fill in `apps/web/.env.local`:
+
+```bash
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
+CLERK_SECRET_KEY=sk_test_your_secret_here
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+### Environment Variables
+
+| Variable | Exposure | Required | Source |
+|----------|----------|----------|--------|
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Browser + Server | Yes | Clerk dashboard → API Keys |
+| `CLERK_SECRET_KEY` | **Server only** — never use `NEXT_PUBLIC_` prefix | Yes | Clerk dashboard → API Keys |
+| `NEXT_PUBLIC_API_URL` | Browser + Server | Yes | `http://localhost:3001` (local) |
+
+### Routes
+
+| Route | Access | Notes |
+|-------|--------|-------|
+| `/` | Public | Shows Sign In / Sign Up CTAs when signed out |
+| `/sign-in` | Public | Clerk-hosted sign-in UI |
+| `/sign-up` | Public | Clerk-hosted sign-up UI |
+| `/dashboard` | Protected | Redirects to `/sign-in` if unauthenticated |
+
+For full setup documentation see [specs/007-clerk-auth-nextjs/quickstart.md](specs/007-clerk-auth-nextjs/quickstart.md).
 
 ## Structure
 
