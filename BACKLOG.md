@@ -32,10 +32,10 @@ As a developer, I want local infrastructure so I can run the system locally.
 
 ### Tasks
 
-- [ ] Setup Docker
-- [ ] Add PostgreSQL container
-- [ ] Add Redis container
-- [ ] Verify connections from backend
+- [/] Setup Docker
+- [/] Add PostgreSQL container
+- [/] Add Redis container
+- [/] Verify connections from backend
 
 ---
 
