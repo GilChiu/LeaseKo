@@ -6,7 +6,9 @@ import { verifyToken } from "@clerk/backend";
 export class ClerkTokenVerifierService {
   constructor(private readonly config: ConfigService) {}
 
-  async verify(token: string): Promise<string> {
+  async verify(
+    token: string,
+  ): Promise<{ userId: string; tenantId: string | null }> {
     try {
       const payload = await verifyToken(token, {
         secretKey: this.config.getOrThrow<string>("CLERK_SECRET_KEY"),
@@ -14,7 +16,13 @@ export class ClerkTokenVerifierService {
       if (!payload.sub) {
         throw new UnauthorizedException();
       }
-      return payload.sub;
+      // Clerk v2 JWT compact format: org context is in the 'o' claim object.
+      // o.id = organization ID (e.g. "org_..."), absent when no active org session.
+      const orgClaim = (
+        payload as Record<string, Record<string, string> | undefined>
+      ).o;
+      const tenantId = orgClaim?.id ?? null;
+      return { userId: payload.sub, tenantId };
     } catch {
       throw new UnauthorizedException();
     }

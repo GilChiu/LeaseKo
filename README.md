@@ -149,7 +149,7 @@ docker compose -f infra/docker-compose.yml --env-file infra/.env.docker logs -f 
 | Feature     | Description                                                                                                       |
 | ----------- | ----------------------------------------------------------------------------------------------------------------- |
 | Feature 008 | BullMQ Queues — `REDIS_URL` connects queue workers to Redis; every job payload must include `tenantId` + `userId` |
-| Feature 009 | Clerk NestJS Auth — requires `CLERK_SECRET_KEY` + `CLERK_JWKS_URL` in `apps/api/.env` to verify JWTs from frontend |
+| Feature 009 | Tenant-Aware Request Context — `tenantId` extracted from Clerk JWT `o.id` claim; `@RequiresTenant()` enforces org session; ready for Prisma row-level isolation |
 
 ## Clerk Authentication
 
@@ -230,7 +230,11 @@ curl http://localhost:3001/api/v1/auth/me
 # Protected — invalid token → 401
 curl http://localhost:3001/api/v1/auth/me -H "Authorization: Bearer bad"
 
-# Protected — valid Clerk JWT → 200 { userId: "user_..." }
+# Protected — valid JWT without active org → 403
+curl http://localhost:3001/api/v1/auth/me \
+  -H "Authorization: Bearer <token-no-org>"
+
+# Protected — valid Clerk JWT with active org → 200 { userId, tenantId }
 curl http://localhost:3001/api/v1/auth/me \
   -H "Authorization: Bearer <paste-token-here>"
 ```
@@ -246,7 +250,8 @@ curl http://localhost:3001/api/v1/auth/me \
 - `ClerkJwtGuard` is registered via `{ provide: APP_GUARD, useClass: ClerkJwtGuard }` in `AuthModule` — this enables full NestJS DI (ConfigService, VerifyClerkTokenUseCase).
 - `@Public()` decorator marks routes that bypass the guard (e.g. `GET /health`).
 - `@CurrentUser()` param decorator provides typed `IRequestContext` in controllers.
-- `request.user.tenantId` is `null` until Feature 009 extracts the Clerk `org_id` claim.
+- `@RequiresTenant()` decorator enforces an active organization session — routes decorated with it return `403` when `tenantId` is null.
+- `request.user` is always set for authenticated requests; `tenantId` is `null` when no organization is active.
 
 ## Structure
 
@@ -262,3 +267,62 @@ infra/
 ```
 
 For full setup documentation see [specs/006-docker-local-infra/quickstart.md](specs/006-docker-local-infra/quickstart.md).
+
+## Tenant Context
+
+Every authenticated API request carries a `tenantId` extracted from the Clerk JWT. LeaseKo uses Clerk Organizations as tenants — a user signing in with an active organization session receives a JWT containing the `o` (organization) claim in v2 compact format.
+
+### How It Works
+
+1. `ClerkJwtGuard` calls `verifyToken()` to validate the JWT.
+2. The `o.id` field inside the decoded payload becomes `request.user.tenantId`.
+3. Routes decorated with `@RequiresTenant()` automatically return `403 Forbidden` when the user has no active organization session.
+
+```typescript
+// Require an active org session on any route
+@Get('properties')
+@RequiresTenant()
+list(@CurrentUser() user: IRequestContext) {
+  // user.tenantId is guaranteed non-null here
+  return this.propertyService.findAll(user.tenantId!);
+}
+
+// Read tenantId directly as a parameter
+@Get('properties')
+@RequiresTenant()
+list(@CurrentTenant() tenantId: string) {
+  return this.propertyService.findAll(tenantId);
+}
+```
+
+### Getting a JWT with an Organization Context
+
+1. Sign in to http://localhost:3000 with a user that belongs to an organization.
+2. Activate the organization in the Clerk UI (user menu → switch organization).
+3. Get the token from the browser console:
+
+```js
+const token = await window.Clerk.session.getToken();
+console.log(token); // contains o.id = "org_..."
+```
+
+### `IRequestContext` Shape
+
+```typescript
+interface IRequestContext {
+  userId: string;        // Clerk user ID (e.g. "user_2abc...")
+  tenantId: string | null; // Clerk org ID (e.g. "org_456...") — null if no active org
+  role: string | null;   // Reserved for RBAC (Feature 010+)
+}
+```
+
+### Prisma Row-Level Isolation (Future)
+
+Every Prisma query on multi-tenant tables should filter by `tenantId`:
+
+```typescript
+// Pattern for future use — not yet implemented
+this.prisma.property.findMany({ where: { tenantId: user.tenantId! } });
+```
+
+For full documentation see [specs/009-tenant-aware-request-context/plan.md](specs/009-tenant-aware-request-context/plan.md).

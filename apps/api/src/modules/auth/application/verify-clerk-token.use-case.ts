@@ -5,7 +5,9 @@ import { ClerkTokenVerifierService } from "../infrastructure/clerk-token-verifie
 export class VerifyClerkTokenUseCase {
   constructor(private readonly verifier: ClerkTokenVerifierService) {}
 
-  async execute(token: string): Promise<string> {
+  async execute(
+    token: string,
+  ): Promise<{ userId: string; tenantId: string | null }> {
     return this.verifier.verify(token);
   }
 }
