@@ -1,17 +1,4 @@
-/**
- * Dashboard Route Group Layout
- *
- * Epic 2 (Clerk Authentication): Add server-side auth check here. Example:
- *
- *   import { auth } from '@clerk/nextjs/server';
- *   import { redirect } from 'next/navigation';
- *   ...
- *   const { userId } = await auth();
- *   if (!userId) redirect('/sign-in');
- *
- * This layout wraps all routes under (dashboard)/ including /dashboard,
- * /dashboard/properties, /dashboard/units, etc.
- */
+import { UserButton } from "@clerk/nextjs";
 
 export default function DashboardLayout({
   children,
@@ -49,11 +36,10 @@ export default function DashboardLayout({
 
       {/* Main content area */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Top bar — Epic 2+: add user avatar / org switcher here */}
+        {/* Top bar */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center px-6 shrink-0">
           <div className="ml-auto flex items-center gap-4 text-sm text-slate-500">
-            {/* Epic 2: <UserButton /> from @clerk/nextjs goes here */}
-            <span>Account</span>
+            <UserButton afterSignOutUrl="/sign-in" />
           </div>
         </header>
 
