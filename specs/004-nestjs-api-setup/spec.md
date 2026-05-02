@@ -6,7 +6,7 @@
 
 ---
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 — Developer Runs and Verifies the API (Priority: P1)
 
@@ -97,7 +97,7 @@ As a developer, I want database, queue, and authentication integration points sc
 
 ---
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -127,7 +127,7 @@ As a developer, I want database, queue, and authentication integration points sc
 
 ---
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

@@ -21,21 +21,23 @@ Initialize a production-ready pnpm + Turborepo monorepo containing a Next.js 14 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 > **Scope note**: This feature is infrastructure scaffolding only. No business logic, endpoints, database tables, or authentication flows are implemented. Constitution checks that are not triggered by the scope of this feature are marked N/A with justification. All applicable checks pass.
 
 **Architecture**
+
 - [x] Module follows four-layer Clean Architecture: `domain / application / infrastructure / presentation`
-  — Folder structure scaffolded per module in `apps/api/src/modules/`. No logic present yet.
+      — Folder structure scaffolded per module in `apps/api/src/modules/`. No logic present yet.
 - [x] Domain layer imports no NestJS or Prisma packages
-  — No domain code written; structure is empty directories.
+      — No domain code written; structure is empty directories.
 - [x] Controllers are thin — all logic delegated to use cases
-  — Only a health-check controller is created; it has no logic.
+      — Only a health-check controller is created; it has no logic.
 - [x] Cross-module interaction uses explicit interfaces or events only (no direct internal imports)
-  — No cross-module interaction in this phase.
+      — No cross-module interaction in this phase.
 
 **Multi-Tenancy (CRITICAL)**
+
 - N/A All new DB tables include `tenant_id` column with index
   — No DB tables are created in this phase. Prisma is not installed.
 - N/A All repository queries filter by `tenant_id` — no unscoped queries
@@ -44,18 +46,21 @@ Initialize a production-ready pnpm + Turborepo monorepo containing a Next.js 14 
   — No guards or business logic in this phase.
 
 **Authentication & Authorization**
+
 - N/A Clerk JWT is verified against JWKS — client-supplied identity is never trusted
   — Clerk is not integrated in this phase. Structure is prepared.
 - N/A Role/permission checks are enforced in backend guards, not in frontend
   — No auth logic in this phase.
 
 **Data Layer**
+
 - N/A All DB access goes through repository interfaces (no direct Prisma usage in application/domain/presentation)
   — Prisma is not installed in this phase.
 - N/A Prisma schema changes include `tenant_id` index on affected models
   — No schema in this phase.
 
 **API & Async**
+
 - N/A All new endpoints are documented with Swagger/OpenAPI decorators
   — No feature endpoints added. Swagger setup is scaffolded (configuration only, no endpoint docs).
 - N/A All DTOs use `class-validator` decorators for strict validation
@@ -66,6 +71,7 @@ Initialize a production-ready pnpm + Turborepo monorepo containing a Next.js 14 
   — No jobs in this phase.
 
 **Testing**
+
 - N/A Unit tests cover domain and application layer logic
   — No domain or application logic exists yet. Jest is configured.
 - N/A Integration tests cover repository and module interactions
@@ -74,12 +80,13 @@ Initialize a production-ready pnpm + Turborepo monorepo containing a Next.js 14 
   — No feature endpoints in this phase.
 
 **Security**
+
 - [x] No secrets or credentials in source code
-  — `.env.example` documents all variables. All values are read from environment. No defaults committed.
+      — `.env.example` documents all variables. All values are read from environment. No defaults committed.
 - N/A Rate limiting applied to new public-facing endpoints
   — The only endpoint is `/health` which is an internal liveness check, not a public API.
 - [x] All inputs validated and sanitised before processing
-  — No user inputs accepted in this phase.
+      — No user inputs accepted in this phase.
 
 ## Project Structure
 

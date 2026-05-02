@@ -36,11 +36,13 @@ The `.env.example` provides development defaults for all required variables. The
 ## 3. Start the API (development)
 
 **App-level** (hot reload via `nest start --watch`):
+
 ```bash
 pnpm --filter @leaseKo/api dev
 ```
 
 **Monorepo root** (all apps via Turborepo):
+
 ```bash
 pnpm dev
 ```
@@ -56,6 +58,7 @@ curl http://localhost:3001/api/v1/health
 ```
 
 Expected response:
+
 ```json
 {
   "status": "ok",
@@ -73,6 +76,7 @@ curl -H "Authorization: Bearer any-token-here" http://localhost:3001/api/v1/me
 ```
 
 Expected response:
+
 ```json
 {
   "userId": "stub_user_001",
@@ -81,6 +85,7 @@ Expected response:
 ```
 
 Without a token:
+
 ```json
 {
   "statusCode": 401,
@@ -94,6 +99,7 @@ Without a token:
 ## 6. View Swagger UI
 
 Open in browser (development only):
+
 ```
 http://localhost:3001/api/docs
 ```
@@ -150,17 +156,17 @@ pnpm --filter @leaseKo/api start
 
 ## Environment Variables Reference
 
-| Variable | Required | Default | Description |
-|---|---|---|---|
-| `NODE_ENV` | No | `development` | `development`, `production`, or `test` |
-| `PORT` | No | `3001` | HTTP port the API listens on |
-| `FRONTEND_URL` | **Yes** | `http://localhost:3000` | CORS allowed origin (Next.js frontend URL) |
-| `DATABASE_URL` | **Yes** | See `.env.example` | PostgreSQL connection string |
-| `REDIS_URL` | **Yes** | `redis://localhost:6379` | Redis connection string |
-| `CLERK_SECRET_KEY` | Optional* | — | Clerk secret key (required when Clerk is integrated — Epic 2) |
-| `CLERK_JWKS_URL` | Optional* | — | Clerk JWKS endpoint URL (required when Clerk is integrated — Epic 2) |
+| Variable           | Required   | Default                  | Description                                                          |
+| ------------------ | ---------- | ------------------------ | -------------------------------------------------------------------- |
+| `NODE_ENV`         | No         | `development`            | `development`, `production`, or `test`                               |
+| `PORT`             | No         | `3001`                   | HTTP port the API listens on                                         |
+| `FRONTEND_URL`     | **Yes**    | `http://localhost:3000`  | CORS allowed origin (Next.js frontend URL)                           |
+| `DATABASE_URL`     | **Yes**    | See `.env.example`       | PostgreSQL connection string                                         |
+| `REDIS_URL`        | **Yes**    | `redis://localhost:6379` | Redis connection string                                              |
+| `CLERK_SECRET_KEY` | Optional\* | —                        | Clerk secret key (required when Clerk is integrated — Epic 2)        |
+| `CLERK_JWKS_URL`   | Optional\* | —                        | Clerk JWKS endpoint URL (required when Clerk is integrated — Epic 2) |
 
-*Optional for this feature; will become required when Clerk authentication is integrated.
+\*Optional for this feature; will become required when Clerk authentication is integrated.
 
 ---
 

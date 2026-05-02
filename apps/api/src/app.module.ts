@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { appConfig } from './common/config/app.config';
-import { validationSchema } from './common/config/validation.schema';
-import { HealthModule } from './modules/health/health.module';
-import { SystemModule } from './modules/system/system.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { TenantsModule } from './modules/tenants/tenants.module';
-import { DatabaseModule } from './database/prisma/prisma.module';
-import { QueuesModule } from './queues/bullmq/bullmq.module';
+import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { appConfig } from "./common/config/app.config";
+import { validationSchema } from "./common/config/validation.schema";
+import { HealthModule } from "./modules/health/health.module";
+import { SystemModule } from "./modules/system/system.module";
+import { AuthModule } from "./modules/auth/auth.module";
+import { TenantsModule } from "./modules/tenants/tenants.module";
+import { DatabaseModule } from "./database/prisma/prisma.module";
+import { QueuesModule } from "./queues/bullmq/bullmq.module";
 
 @Module({
   imports: [

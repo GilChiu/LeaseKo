@@ -1,6 +1,6 @@
-import { HealthController } from './health.controller';
+import { HealthController } from "./health.controller";
 
-describe('HealthController', () => {
+describe("HealthController", () => {
   let controller: HealthController;
 
   beforeEach(() => {
@@ -9,15 +9,15 @@ describe('HealthController', () => {
 
   it('should return status "ok"', () => {
     const result = controller.check();
-    expect(result.status).toBe('ok');
+    expect(result.status).toBe("ok");
   });
 
   it('should return service "api"', () => {
     const result = controller.check();
-    expect(result.service).toBe('api');
+    expect(result.service).toBe("api");
   });
 
-  it('should return a valid ISO 8601 timestamp', () => {
+  it("should return a valid ISO 8601 timestamp", () => {
     const result = controller.check();
     const parsed = Date.parse(result.timestamp);
     expect(Number.isNaN(parsed)).toBe(false);

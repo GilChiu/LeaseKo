@@ -27,9 +27,9 @@ Returns the identity context of the currently authenticated caller — their use
 
 ### Headers
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Authorization` | Yes | `Bearer <jwt>` — Clerk-issued JWT token |
+| Header          | Required | Description                             |
+| --------------- | -------- | --------------------------------------- |
+| `Authorization` | Yes      | `Bearer <jwt>` — Clerk-issued JWT token |
 
 **Query Parameters**: None.
 
@@ -52,9 +52,9 @@ Returns the identity context of the currently authenticated caller — their use
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `userId` | `string` | Clerk user ID of the authenticated caller |
+| Field      | Type     | Description                                                |
+| ---------- | -------- | ---------------------------------------------------------- |
+| `userId`   | `string` | Clerk user ID of the authenticated caller                  |
 | `tenantId` | `string` | Tenant ID derived from Clerk organisation claim in the JWT |
 
 ---
@@ -76,6 +76,7 @@ Returned when the `Authorization` header is absent, malformed, or the token is e
 ```
 
 **Triggers**:
+
 - `Authorization` header is missing entirely
 - Header is present but value is not `Bearer <token>` format
 - Token string is empty after `Bearer ` prefix

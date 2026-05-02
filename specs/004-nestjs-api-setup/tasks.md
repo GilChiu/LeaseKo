@@ -9,9 +9,9 @@
 
 **Purpose**: Install new runtime and dev dependencies, add test scripts to `package.json`.
 
-- [X] T001 Install `joi` runtime dependency in `apps/api/package.json` — run `pnpm --filter @leaseKo/api add joi`
-- [X] T002 [P] Add Jest devDependencies and test scripts to `apps/api/package.json` — add `jest`, `ts-jest`, `@types/jest`, `@nestjs/testing` to `devDependencies`; add `"test": "jest"`, `"test:watch": "jest --watch"`, `"test:cov": "jest --coverage"` to `scripts`
-- [X] T003 [P] Create `apps/api/jest.config.ts` with `ts-jest` transformer, `rootDir: 'src'`, `testRegex: '.*\\.spec\\.ts$'`, `moduleNameMapper` for `@/*` path alias
+- [x] T001 Install `joi` runtime dependency in `apps/api/package.json` — run `pnpm --filter @leaseKo/api add joi`
+- [x] T002 [P] Add Jest devDependencies and test scripts to `apps/api/package.json` — add `jest`, `ts-jest`, `@types/jest`, `@nestjs/testing` to `devDependencies`; add `"test": "jest"`, `"test:watch": "jest --watch"`, `"test:cov": "jest --coverage"` to `scripts`
+- [x] T003 [P] Create `apps/api/jest.config.ts` with `ts-jest` transformer, `rootDir: 'src'`, `testRegex: '.*\\.spec\\.ts$'`, `moduleNameMapper` for `@/*` path alias
 
 ---
 
@@ -21,11 +21,11 @@
 
 **Independent Test**: Start the API with `.env` present → starts cleanly; start without `FRONTEND_URL` → exits with descriptive error.
 
-- [X] T004 Create `apps/api/src/common/config/validation.schema.ts` with Joi schema validating `NODE_ENV`, `PORT`, `FRONTEND_URL` (required), `DATABASE_URL` (required), `REDIS_URL` (required), `CLERK_SECRET_KEY` (optional), `CLERK_JWKS_URL` (optional)
-- [X] T005 [P] Create `apps/api/src/common/config/app.config.ts` exporting `AppConfig` interface and `appConfig()` factory function
-- [X] T006 Update `apps/api/.env.example` — rename `CORS_ORIGIN` → `FRONTEND_URL`, add `CLERK_SECRET_KEY=` and `CLERK_JWKS_URL=` blocks with comments
-- [X] T007 Update `apps/api/src/app.module.ts` — add `validationSchema` and `load: [appConfig]` to `ConfigModule.forRoot()`; import `AuthModule`, `TenantsModule`, `DatabaseModule`, `QueuesModule`
-- [X] T008 Update `apps/api/src/main.ts` — replace `process.env.CORS_ORIGIN` with `process.env.FRONTEND_URL`; register `GlobalExceptionFilter` via `app.useGlobalFilters(new GlobalExceptionFilter())`
+- [x] T004 Create `apps/api/src/common/config/validation.schema.ts` with Joi schema validating `NODE_ENV`, `PORT`, `FRONTEND_URL` (required), `DATABASE_URL` (required), `REDIS_URL` (required), `CLERK_SECRET_KEY` (optional), `CLERK_JWKS_URL` (optional)
+- [x] T005 [P] Create `apps/api/src/common/config/app.config.ts` exporting `AppConfig` interface and `appConfig()` factory function
+- [x] T006 Update `apps/api/.env.example` — rename `CORS_ORIGIN` → `FRONTEND_URL`, add `CLERK_SECRET_KEY=` and `CLERK_JWKS_URL=` blocks with comments
+- [x] T007 Update `apps/api/src/app.module.ts` — add `validationSchema` and `load: [appConfig]` to `ConfigModule.forRoot()`; import `AuthModule`, `TenantsModule`, `DatabaseModule`, `QueuesModule`
+- [x] T008 Update `apps/api/src/main.ts` — replace `process.env.CORS_ORIGIN` with `process.env.FRONTEND_URL`; register `GlobalExceptionFilter` via `app.useGlobalFilters(new GlobalExceptionFilter())`
 
 ---
 
@@ -35,11 +35,11 @@
 
 **Independent Test**: `curl http://localhost:3001/api/v1/health` → `{ "status": "ok", "service": "api", "timestamp": "..." }`
 
-- [X] T009 [US1] Update `apps/api/src/modules/health/presentation/dto/health-response.dto.ts` — add `@ApiProperty({ example: 'api' }) service!: string`
-- [X] T010 [US1] Update `apps/api/src/modules/health/health.controller.ts` — add `service: 'api'` to the `check()` return value
-- [X] T011 [US1] Run `pnpm install` from monorepo root to install `joi` and new Jest devDeps — verify exit code 0
-- [X] T012 [US1] Copy `apps/api/.env.example` to `apps/api/.env` locally and start API; verify `GET /api/v1/health` returns HTTP 200 with `{ status: "ok", service: "api", timestamp: "..." }`
-- [X] T013 [US1] Verify startup failure: remove `FRONTEND_URL` from `.env` and start API; confirm process exits with a descriptive Joi validation error naming `FRONTEND_URL`; restore `.env`
+- [x] T009 [US1] Update `apps/api/src/modules/health/presentation/dto/health-response.dto.ts` — add `@ApiProperty({ example: 'api' }) service!: string`
+- [x] T010 [US1] Update `apps/api/src/modules/health/health.controller.ts` — add `service: 'api'` to the `check()` return value
+- [x] T011 [US1] Run `pnpm install` from monorepo root to install `joi` and new Jest devDeps — verify exit code 0
+- [x] T012 [US1] Copy `apps/api/.env.example` to `apps/api/.env` locally and start API; verify `GET /api/v1/health` returns HTTP 200 with `{ status: "ok", service: "api", timestamp: "..." }`
+- [x] T013 [US1] Verify startup failure: remove `FRONTEND_URL` from `.env` and start API; confirm process exits with a descriptive Joi validation error naming `FRONTEND_URL`; restore `.env`
 
 ---
 
@@ -49,8 +49,8 @@
 
 **Independent Test**: `pnpm --filter @leaseKo/api build` exits 0; `pnpm --filter @leaseKo/api lint` exits 0.
 
-- [X] T014 [US2] Run `pnpm --filter @leaseKo/api build` — verify exit code 0 and zero TypeScript errors
-- [X] T015 [US2] Run `pnpm --filter @leaseKo/api lint` — verify zero ESLint errors and zero warnings
+- [x] T014 [US2] Run `pnpm --filter @leaseKo/api build` — verify exit code 0 and zero TypeScript errors
+- [x] T015 [US2] Run `pnpm --filter @leaseKo/api lint` — verify zero ESLint errors and zero warnings
 
 ---
 
@@ -60,12 +60,12 @@
 
 **Independent Test**: `ls apps/api/src/modules/auth/` → shows `domain/`, `application/`, `infrastructure/`, `presentation/`; `ls apps/api/src/common/` → shows `config/`, `decorators/`, `filters/`, `guards/`, `interceptors/`, `middleware/`, `pipes/`, `types/`, `utils/`.
 
-- [X] T016 [P] [US3] Create `apps/api/src/common/types/request-context.type.ts` exporting `IRequestContext { userId: string; tenantId: string; role: string }` with JSDoc describing Epic 2 population contract
-- [X] T017 [P] [US3] Create `.gitkeep` files in `apps/api/src/common/interceptors/`, `src/common/pipes/`, `src/common/utils/`
-- [X] T018 [P] [US3] Create `apps/api/src/modules/auth/auth.module.ts` as empty `@Module({})` with JSDoc describing Epic 2 content and architecture rules
-- [X] T019 [P] [US3] Create `.gitkeep` files in `apps/api/src/modules/auth/domain/`, `application/`, `infrastructure/`, `presentation/`
-- [X] T020 [P] [US3] Create `apps/api/src/modules/tenants/tenants.module.ts` as empty `@Module({})` with JSDoc describing future content and tenant_id architecture rules
-- [X] T021 [P] [US3] Create `.gitkeep` files in `apps/api/src/modules/tenants/domain/`, `application/`, `infrastructure/`, `presentation/`
+- [x] T016 [P] [US3] Create `apps/api/src/common/types/request-context.type.ts` exporting `IRequestContext { userId: string; tenantId: string; role: string }` with JSDoc describing Epic 2 population contract
+- [x] T017 [P] [US3] Create `.gitkeep` files in `apps/api/src/common/interceptors/`, `src/common/pipes/`, `src/common/utils/`
+- [x] T018 [P] [US3] Create `apps/api/src/modules/auth/auth.module.ts` as empty `@Module({})` with JSDoc describing Epic 2 content and architecture rules
+- [x] T019 [P] [US3] Create `.gitkeep` files in `apps/api/src/modules/auth/domain/`, `application/`, `infrastructure/`, `presentation/`
+- [x] T020 [P] [US3] Create `apps/api/src/modules/tenants/tenants.module.ts` as empty `@Module({})` with JSDoc describing future content and tenant_id architecture rules
+- [x] T021 [P] [US3] Create `.gitkeep` files in `apps/api/src/modules/tenants/domain/`, `application/`, `infrastructure/`, `presentation/`
 
 ---
 
@@ -75,9 +75,9 @@
 
 **Independent Test**: `curl http://localhost:3001/api/v1/nonexistent` → `{ "statusCode": 404, "message": "...", "error": "Not Found" }`; `curl -X POST http://localhost:3001/api/v1/health` (wrong method) → standardized error shape.
 
-- [X] T022 [US4] Create `apps/api/src/common/filters/global-exception.filter.ts` with `@Catch()` class handling both `HttpException` (extracts status/message/error) and unknown errors (logs stack, returns 500 without exposing stack trace)
-- [X] T023 [US4] Verify `GlobalExceptionFilter` is registered in `apps/api/src/main.ts` via `app.useGlobalFilters()` (done in T008; confirm registration is correct)
-- [X] T024 [US4] Smoke-test error envelope: run API and call a non-existent route; confirm response shape is `{ statusCode, message, error }` with no stack trace
+- [x] T022 [US4] Create `apps/api/src/common/filters/global-exception.filter.ts` with `@Catch()` class handling both `HttpException` (extracts status/message/error) and unknown errors (logs stack, returns 500 without exposing stack trace)
+- [x] T023 [US4] Verify `GlobalExceptionFilter` is registered in `apps/api/src/main.ts` via `app.useGlobalFilters()` (done in T008; confirm registration is correct)
+- [x] T024 [US4] Smoke-test error envelope: run API and call a non-existent route; confirm response shape is `{ statusCode, message, error }` with no stack trace
 
 ---
 
@@ -87,9 +87,9 @@
 
 **Independent Test**: `ls apps/api/src/database/prisma/` → `prisma.module.ts`, `prisma.service.ts`; `ls apps/api/src/queues/bullmq/` → `bullmq.module.ts`; start API without Docker running → no startup error.
 
-- [X] T025 [P] [US5] Create `apps/api/src/database/prisma/prisma.service.ts` as startup-safe `@Injectable()` with logging-only `onModuleInit()` (no `$connect()` call) and JSDoc describing Feature 005 entry point
-- [X] T026 [P] [US5] Create `apps/api/src/database/prisma/prisma.module.ts` as `@Global()` `@Module({ providers: [PrismaService], exports: [PrismaService] })` named `DatabaseModule`
-- [X] T027 [P] [US5] Create `apps/api/src/queues/bullmq/bullmq.module.ts` as empty `@Module({})` named `QueuesModule` with JSDoc describing Feature 007 entry point and constitution rules for BullMQ jobs
+- [x] T025 [P] [US5] Create `apps/api/src/database/prisma/prisma.service.ts` as startup-safe `@Injectable()` with logging-only `onModuleInit()` (no `$connect()` call) and JSDoc describing Feature 005 entry point
+- [x] T026 [P] [US5] Create `apps/api/src/database/prisma/prisma.module.ts` as `@Global()` `@Module({ providers: [PrismaService], exports: [PrismaService] })` named `DatabaseModule`
+- [x] T027 [P] [US5] Create `apps/api/src/queues/bullmq/bullmq.module.ts` as empty `@Module({})` named `QueuesModule` with JSDoc describing Feature 007 entry point and constitution rules for BullMQ jobs
 
 ---
 
@@ -97,8 +97,8 @@
 
 **Purpose**: Establish Jest test infrastructure and validate all user stories with a passing unit test.
 
-- [X] T028 [US1] [US3] Create `apps/api/src/modules/health/health.controller.spec.ts` with 3 unit tests: `status === 'ok'`, `service === 'api'`, `timestamp` is valid ISO 8601
-- [X] T029 Run `pnpm --filter @leaseKo/api test` — verify 3/3 tests pass, exit code 0
+- [x] T028 [US1] [US3] Create `apps/api/src/modules/health/health.controller.spec.ts` with 3 unit tests: `status === 'ok'`, `service === 'api'`, `timestamp` is valid ISO 8601
+- [x] T029 Run `pnpm --filter @leaseKo/api test` — verify 3/3 tests pass, exit code 0
 
 ---
 
@@ -120,6 +120,7 @@ T014 + T015 (build + lint) → must run after all source files are in place
 ## Parallel Execution (per story)
 
 **US1 (P1 — API runs)**:
+
 ```
 T004 ─┐
 T005 ─┤→ T007 → T008 → T011 → T012 → T013
@@ -130,12 +131,14 @@ T010 ─┘ (parallel with config tasks)
 ```
 
 **US2 (P1 — Build + lint)** — run after all source files complete:
+
 ```
 T014 ─┐ (parallel)
 T015 ─┘
 ```
 
 **US3 (P2 — Clean architecture)** — all parallel:
+
 ```
 T016 ─┐
 T017 ─┤
@@ -146,11 +149,13 @@ T021 ─┘
 ```
 
 **US4 (P2 — Error handling)**:
+
 ```
 T022 → T008 (already done) → T023 → T024
 ```
 
 **US5 (P3 — Future integrations)** — all parallel:
+
 ```
 T025 ─┐
 T026 ─┤ (all parallel) → T007 (app.module.ts)

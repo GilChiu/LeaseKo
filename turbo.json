@@ -22,6 +22,16 @@
     "test": {
       "cache": false,
       "outputs": []
+    },
+    "typecheck": {
+      "cache": true,
+      "outputs": [],
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "tsconfig.json",
+        "tsconfig.*.json"
+      ]
     }
   }
 }

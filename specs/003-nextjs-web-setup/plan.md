@@ -25,11 +25,12 @@ Extend the existing `apps/web` Next.js 14 scaffold (created in Feature 001) with
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 > **Scope note**: This feature is frontend-only — no NestJS backend code, no DB tables, no Prisma, no BullMQ, no Clerk. All constitution principles apply to the backend; N/A items below reflect that this feature does not touch the backend at all.
 
 **Architecture**
+
 - N/A Module follows four-layer Clean Architecture: `domain / application / infrastructure / presentation`
   — This feature modifies `apps/web` (Next.js frontend), not a NestJS backend module. Clean Architecture applies to NestJS modules only.
 - N/A Domain layer imports no NestJS or Prisma packages
@@ -40,6 +41,7 @@ Extend the existing `apps/web` Next.js 14 scaffold (created in Feature 001) with
   — No cross-module backend interaction.
 
 **Multi-Tenancy (CRITICAL)**
+
 - N/A All new DB tables include `tenant_id` column with index
   — No DB tables created.
 - N/A All repository queries filter by `tenant_id` — no unscoped queries
@@ -48,18 +50,21 @@ Extend the existing `apps/web` Next.js 14 scaffold (created in Feature 001) with
   — No backend guards in this feature. The frontend API client has an extension point for the Clerk JWT (Epic 2); it does NOT enforce multi-tenancy — that is the backend's responsibility.
 
 **Authentication & Authorization**
+
 - [x] Clerk JWT is verified against JWKS — client-supplied identity is never trusted
-  — No Clerk verification in this feature. The spec explicitly defers Clerk to Epic 2. The frontend does not verify JWTs — it only passes them to the backend. The backend (already established) does the JWKS verification.
+      — No Clerk verification in this feature. The spec explicitly defers Clerk to Epic 2. The frontend does not verify JWTs — it only passes them to the backend. The backend (already established) does the JWKS verification.
 - [x] Role/permission checks are enforced in backend guards, not in frontend
-  — Spec FR-014 explicitly prohibits tenant authorization logic in the frontend. Dashboard layout has a comment noting where Clerk auth protection will be added in Epic 2.
+      — Spec FR-014 explicitly prohibits tenant authorization logic in the frontend. Dashboard layout has a comment noting where Clerk auth protection will be added in Epic 2.
 
 **Data Layer**
+
 - N/A All DB access goes through repository interfaces
   — No DB access in frontend.
 - N/A Prisma schema changes include `tenant_id` index
   — No Prisma changes.
 
 **API & Async**
+
 - N/A All new endpoints are documented with Swagger/OpenAPI decorators
   — No new endpoints. Frontend consumes existing endpoints only.
 - N/A All DTOs use `class-validator` decorators for strict validation
@@ -70,6 +75,7 @@ Extend the existing `apps/web` Next.js 14 scaffold (created in Feature 001) with
   — No jobs.
 
 **Testing**
+
 - N/A Unit tests cover domain and application layer logic
   — No domain or application logic.
 - N/A Integration tests cover repository and module interactions
@@ -78,12 +84,13 @@ Extend the existing `apps/web` Next.js 14 scaffold (created in Feature 001) with
   — Manual browser verification is sufficient for this scaffold feature. Automated E2E will be added with Cypress/Playwright in a future feature.
 
 **Security**
+
 - [x] No secrets or credentials in source code
-  — All env vars are `NEXT_PUBLIC_*` (safe to expose to browser). No secrets are embedded. `env.ts` reads from runtime env — not from source.
+      — All env vars are `NEXT_PUBLIC_*` (safe to expose to browser). No secrets are embedded. `env.ts` reads from runtime env — not from source.
 - N/A Rate limiting applied to new public-facing endpoints
   — No new endpoints.
 - [x] All inputs validated and sanitised before processing
-  — No user inputs that reach the backend in this feature. The API client is a pass-through wrapper. Form validation will be added feature by feature in future epics.
+      — No user inputs that reach the backend in this feature. The API client is a pass-through wrapper. Form validation will be added feature by feature in future epics.
 
 ## Project Structure
 
@@ -167,10 +174,10 @@ apps/web/
 
 No constitution violations. This is a pure frontend feature — all N/A items are justified by feature scope (no backend, no DB, no auth).
 
-| N/A Item | Justification |
-|----------|--------------|
-| Clean Architecture layers | Applies to NestJS backend modules only. Next.js uses file-based routing; route files are equivalent to thin controllers by convention. |
-| Multi-tenancy DB checks | No DB tables or queries in this feature. |
-| Clerk JWKS verification | Frontend does not verify JWTs. The backend (already complete) handles all verification. Epic 2 adds Clerk to both the frontend (ClerkProvider) and backend (replacing the stub guard). |
-| BullMQ / async jobs | No async operations in a frontend scaffold feature. |
-| E2E tests | Browser-level manual verification is appropriate for a scaffold. Automated E2E (Playwright or Cypress) is a separate feature. |
+| N/A Item                  | Justification                                                                                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Clean Architecture layers | Applies to NestJS backend modules only. Next.js uses file-based routing; route files are equivalent to thin controllers by convention.                                                 |
+| Multi-tenancy DB checks   | No DB tables or queries in this feature.                                                                                                                                               |
+| Clerk JWKS verification   | Frontend does not verify JWTs. The backend (already complete) handles all verification. Epic 2 adds Clerk to both the frontend (ClerkProvider) and backend (replacing the stub guard). |
+| BullMQ / async jobs       | No async operations in a frontend scaffold feature.                                                                                                                                    |
+| E2E tests                 | Browser-level manual verification is appropriate for a scaffold. Automated E2E (Playwright or Cypress) is a separate feature.                                                          |

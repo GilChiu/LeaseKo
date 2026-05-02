@@ -50,12 +50,12 @@ pnpm dev
 
 Once running, open:
 
-| URL | What |
-|-----|------|
-| http://localhost:3001/api/docs | Swagger UI (interactive docs) |
-| http://localhost:3001/api/docs-json | Raw OpenAPI JSON spec |
-| http://localhost:3001/api/v1/health | Health check (public) |
-| http://localhost:3001/api/v1/me | Identity endpoint (requires Bearer token) |
+| URL                                 | What                                      |
+| ----------------------------------- | ----------------------------------------- |
+| http://localhost:3001/api/docs      | Swagger UI (interactive docs)             |
+| http://localhost:3001/api/docs-json | Raw OpenAPI JSON spec                     |
+| http://localhost:3001/api/v1/health | Health check (public)                     |
+| http://localhost:3001/api/v1/me     | Identity endpoint (requires Bearer token) |
 
 ---
 
@@ -108,16 +108,16 @@ Restore `NODE_ENV=development` before continuing.
 
 ## File Overview
 
-| File | Change |
-|------|--------|
-| `apps/api/src/main.ts` | Added Swagger bootstrap, global ValidationPipe |
-| `apps/api/src/shared/dto/error-response.dto.ts` | New — reusable error envelope DTO |
-| `apps/api/src/common/guards/stub-bearer.guard.ts` | New — stub auth guard for /me |
-| `apps/api/src/modules/health/health.controller.ts` | Updated — Swagger decorators added |
-| `apps/api/src/modules/health/presentation/dto/health-response.dto.ts` | New — health response DTO |
-| `apps/api/src/modules/system/system.controller.ts` | New — GET /me controller |
-| `apps/api/src/modules/system/system.module.ts` | New — System module |
-| `apps/api/src/modules/system/presentation/dto/me-response.dto.ts` | New — /me response DTO |
+| File                                                                  | Change                                         |
+| --------------------------------------------------------------------- | ---------------------------------------------- |
+| `apps/api/src/main.ts`                                                | Added Swagger bootstrap, global ValidationPipe |
+| `apps/api/src/shared/dto/error-response.dto.ts`                       | New — reusable error envelope DTO              |
+| `apps/api/src/common/guards/stub-bearer.guard.ts`                     | New — stub auth guard for /me                  |
+| `apps/api/src/modules/health/health.controller.ts`                    | Updated — Swagger decorators added             |
+| `apps/api/src/modules/health/presentation/dto/health-response.dto.ts` | New — health response DTO                      |
+| `apps/api/src/modules/system/system.controller.ts`                    | New — GET /me controller                       |
+| `apps/api/src/modules/system/system.module.ts`                        | New — System module                            |
+| `apps/api/src/modules/system/presentation/dto/me-response.dto.ts`     | New — /me response DTO                         |
 
 ---
 

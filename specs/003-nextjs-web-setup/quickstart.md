@@ -52,9 +52,9 @@ pnpm dev
 
 Open http://localhost:3000 — you should see the styled LeaseKo landing page.
 
-| URL | What |
-|-----|------|
-| http://localhost:3000 | Landing page |
+| URL                             | What                  |
+| ------------------------------- | --------------------- |
+| http://localhost:3000           | Landing page          |
 | http://localhost:3000/dashboard | Dashboard placeholder |
 
 ---
@@ -113,23 +113,23 @@ Confirm: zero errors, zero warnings.
 
 ## File Overview
 
-| File | Purpose |
-|------|---------|
-| `apps/web/tailwind.config.ts` | Tailwind CSS configuration — content paths, theme extension |
-| `apps/web/postcss.config.mjs` | PostCSS pipeline — required for Tailwind to process CSS |
-| `apps/web/src/styles/globals.css` | Global CSS — Tailwind directives + base styles |
-| `apps/web/src/app/layout.tsx` | Root layout — imports globals.css, sets metadata |
-| `apps/web/src/app/page.tsx` | Landing page — styled with Tailwind |
-| `apps/web/src/app/(auth)/layout.tsx` | Auth route group layout — placeholder for ClerkProvider |
-| `apps/web/src/app/(dashboard)/layout.tsx` | Dashboard layout — sidebar/header shell |
-| `apps/web/src/app/(dashboard)/dashboard/page.tsx` | Dashboard placeholder page |
-| `apps/web/src/lib/api.ts` | Centralized fetch wrapper — use this for all API calls |
-| `apps/web/src/lib/env.ts` | Env var validation — all env vars read from here |
-| `apps/web/src/lib/utils.ts` | Shared utilities — `cn()` class name helper |
-| `apps/web/src/components/ui/button.tsx` | Reusable Button component |
-| `apps/web/src/components/ui/card.tsx` | Reusable Card component |
-| `apps/web/src/components/ui/input.tsx` | Reusable Input component |
-| `apps/web/.env.example` | Environment variable template |
+| File                                              | Purpose                                                     |
+| ------------------------------------------------- | ----------------------------------------------------------- |
+| `apps/web/tailwind.config.ts`                     | Tailwind CSS configuration — content paths, theme extension |
+| `apps/web/postcss.config.mjs`                     | PostCSS pipeline — required for Tailwind to process CSS     |
+| `apps/web/src/styles/globals.css`                 | Global CSS — Tailwind directives + base styles              |
+| `apps/web/src/app/layout.tsx`                     | Root layout — imports globals.css, sets metadata            |
+| `apps/web/src/app/page.tsx`                       | Landing page — styled with Tailwind                         |
+| `apps/web/src/app/(auth)/layout.tsx`              | Auth route group layout — placeholder for ClerkProvider     |
+| `apps/web/src/app/(dashboard)/layout.tsx`         | Dashboard layout — sidebar/header shell                     |
+| `apps/web/src/app/(dashboard)/dashboard/page.tsx` | Dashboard placeholder page                                  |
+| `apps/web/src/lib/api.ts`                         | Centralized fetch wrapper — use this for all API calls      |
+| `apps/web/src/lib/env.ts`                         | Env var validation — all env vars read from here            |
+| `apps/web/src/lib/utils.ts`                       | Shared utilities — `cn()` class name helper                 |
+| `apps/web/src/components/ui/button.tsx`           | Reusable Button component                                   |
+| `apps/web/src/components/ui/card.tsx`             | Reusable Card component                                     |
+| `apps/web/src/components/ui/input.tsx`            | Reusable Input component                                    |
+| `apps/web/.env.example`                           | Environment variable template                               |
 
 ---
 
@@ -137,10 +137,10 @@ Confirm: zero errors, zero warnings.
 
 ```typescript
 // In a feature file, e.g., src/features/properties/api.ts
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from "@/lib/api";
 
 export async function getProperties(token: string) {
-  return apiFetch<Property[]>('/properties', { token });
+  return apiFetch<Property[]>("/properties", { token });
 }
 ```
 

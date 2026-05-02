@@ -4,7 +4,7 @@
 **Created**: 2026-05-02
 **Status**: Draft
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - API Documentation Available to Developers (Priority: P1)
 
@@ -82,7 +82,7 @@ A frontend developer reading the API docs can predict exactly what a success res
 
 ---
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -111,7 +111,7 @@ A frontend developer reading the API docs can predict exactly what a success res
 
 ---
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

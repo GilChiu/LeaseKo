@@ -4,7 +4,7 @@
 **Created**: 2026-05-02
 **Status**: Draft
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Developer Can Run and Build the Web App (Priority: P1)
 
@@ -84,7 +84,7 @@ A developer visits `http://localhost:3000/dashboard` and sees a placeholder page
 
 ---
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -113,7 +113,7 @@ A developer visits `http://localhost:3000/dashboard` and sees a placeholder page
 
 ---
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

@@ -37,36 +37,43 @@ Formalize and complete the NestJS backend foundation in `apps/api`. The basic Ne
 
 ## Constitution Check
 
-*GATE: All items verified against constitution before Phase 0 research. Post-design re-check passes.*
+_GATE: All items verified against constitution before Phase 0 research. Post-design re-check passes._
 
 **Architecture**
+
 - [x] Module follows four-layer Clean Architecture — `auth` and `tenants` scaffolded with `domain / application / infrastructure / presentation` subdirectories
 - [x] Domain layer imports no NestJS or Prisma packages — scaffolded layers are empty; constraint documented in module JSDoc
 - [x] Controllers are thin — no new controllers with business logic; existing controllers remain thin
 - [x] Cross-module interaction uses explicit interfaces — no cross-module coupling introduced in scaffolding
 
 **Multi-Tenancy (CRITICAL)**
+
 - [N/A] All new DB tables include `tenant_id` — no DB tables in this feature
 - [N/A] All repository queries filter by `tenant_id` — no repositories in this feature
 - [x] Request context shape defined — `IRequestContext { userId, tenantId, role }` in `common/types`
 
 **Authentication & Authorization**
+
 - [x] Clerk JWT NOT verified yet — `StubBearerGuard` remains as correct placeholder; Clerk JWKS is Epic 2
 - [x] No authorization business logic in this feature — modules scaffolded only
 
 **Data Layer**
+
 - [N/A] DB access through repository interfaces — no repositories in this feature
 - [N/A] Prisma schema changes — placeholder service only; no actual schema
 
 **API & Async**
+
 - [x] Health endpoint has Swagger decorators (existing); updated with `service` field
 - [N/A] BullMQ jobs — placeholder module only
 
 **Testing**
+
 - [x] Unit test for `HealthController` validates test infrastructure and response shape
 - [N/A] Integration/E2E tests — no repositories or new endpoints
 
 **Security**
+
 - [x] No secrets in source code — `.env.example` uses placeholder values
 - [N/A] Rate limiting — noted for Clerk auth task
 - [x] All inputs validated by global `ValidationPipe` (already in place)
@@ -93,6 +100,7 @@ specs/004-nestjs-api-setup/
 ### Source Code (apps/api changes)
 
 **New files**:
+
 ```text
 apps/api/
 ├── jest.config.ts
@@ -134,6 +142,7 @@ apps/api/
 ```
 
 **Modified files**:
+
 ```text
 apps/api/
 ├── package.json              ← add joi dep; add test scripts + jest devDeps
@@ -157,28 +166,31 @@ apps/api/
 **Goal**: Install `joi`, set up the centralized configuration module with startup validation, update `.env.example`, and update `main.ts` and `app.module.ts`.
 
 **T001** — Install `joi` runtime dependency
+
 ```bash
 pnpm --filter @leaseKo/api add joi
 ```
 
 **T002** — Create `src/common/config/validation.schema.ts`
+
 ```typescript
-import * as Joi from 'joi';
+import * as Joi from "joi";
 
 export const validationSchema = Joi.object({
   NODE_ENV: Joi.string()
-    .valid('development', 'production', 'test')
-    .default('development'),
+    .valid("development", "production", "test")
+    .default("development"),
   PORT: Joi.number().integer().default(3001),
   FRONTEND_URL: Joi.string().uri().required(),
   DATABASE_URL: Joi.string().required(),
   REDIS_URL: Joi.string().required(),
-  CLERK_SECRET_KEY: Joi.string().optional().allow(''),
-  CLERK_JWKS_URL: Joi.string().uri().optional().allow(''),
+  CLERK_SECRET_KEY: Joi.string().optional().allow(""),
+  CLERK_JWKS_URL: Joi.string().uri().optional().allow(""),
 });
 ```
 
 **T003** — Create `src/common/config/app.config.ts`
+
 ```typescript
 export interface AppConfig {
   nodeEnv: string;
@@ -191,8 +203,8 @@ export interface AppConfig {
 }
 
 export const appConfig = (): AppConfig => ({
-  nodeEnv: process.env.NODE_ENV ?? 'development',
-  port: parseInt(process.env.PORT ?? '3001', 10),
+  nodeEnv: process.env.NODE_ENV ?? "development",
+  port: parseInt(process.env.PORT ?? "3001", 10),
   frontendUrl: process.env.FRONTEND_URL!,
   databaseUrl: process.env.DATABASE_URL!,
   redisUrl: process.env.REDIS_URL!,
@@ -202,6 +214,7 @@ export const appConfig = (): AppConfig => ({
 ```
 
 **T004** — Update `apps/api/.env.example` — rename `CORS_ORIGIN` → `FRONTEND_URL`, add Clerk vars:
+
 ```dotenv
 # ──────────────────────────────────────────────────────
 # LeaseKo API — Environment Variables
@@ -229,17 +242,18 @@ CLERK_JWKS_URL=
 ```
 
 **T005** — Update `src/app.module.ts` to use Joi validation and import all modules:
+
 ```typescript
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { appConfig } from './common/config/app.config';
-import { validationSchema } from './common/config/validation.schema';
-import { HealthModule } from './modules/health/health.module';
-import { SystemModule } from './modules/system/system.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { TenantsModule } from './modules/tenants/tenants.module';
-import { DatabaseModule } from './database/prisma/prisma.module';
-import { QueuesModule } from './queues/bullmq/bullmq.module';
+import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { appConfig } from "./common/config/app.config";
+import { validationSchema } from "./common/config/validation.schema";
+import { HealthModule } from "./modules/health/health.module";
+import { SystemModule } from "./modules/system/system.module";
+import { AuthModule } from "./modules/auth/auth.module";
+import { TenantsModule } from "./modules/tenants/tenants.module";
+import { DatabaseModule } from "./database/prisma/prisma.module";
+import { QueuesModule } from "./queues/bullmq/bullmq.module";
 
 @Module({
   imports: [
@@ -261,42 +275,49 @@ export class AppModule {}
 ```
 
 **T006** — Update `src/main.ts` — rename `CORS_ORIGIN` → `FRONTEND_URL`, register `GlobalExceptionFilter`:
+
 ```typescript
-import 'reflect-metadata';
-import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
-import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
+import "reflect-metadata";
+import { NestFactory } from "@nestjs/core";
+import { ValidationPipe } from "@nestjs/common";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { AppModule } from "./app.module";
+import { GlobalExceptionFilter } from "./common/filters/global-exception.filter";
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
   const port = process.env.PORT ?? 3001;
-  const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:3000';
+  const frontendUrl = process.env.FRONTEND_URL ?? "http://localhost:3000";
 
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix("api/v1");
   app.enableCors({ origin: frontendUrl });
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalPipes(
-    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
   );
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     const config = new DocumentBuilder()
-      .setTitle('LeaseKo API')
-      .setDescription('LeaseKo Property Management SaaS API')
-      .setVersion('1.0')
+      .setTitle("LeaseKo API")
+      .setDescription("LeaseKo Property Management SaaS API")
+      .setVersion("1.0")
       .addBearerAuth()
       .build();
-    const document = SwaggerModule.createDocument(app, config, { ignoreGlobalPrefix: true });
-    SwaggerModule.setup('api/docs', app, document);
+    const document = SwaggerModule.createDocument(app, config, {
+      ignoreGlobalPrefix: true,
+    });
+    SwaggerModule.setup("api/docs", app, document);
   }
 
   await app.listen(port);
   // eslint-disable-next-line no-console
   console.log(`API running on http://localhost:${port}`);
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     // eslint-disable-next-line no-console
     console.log(`Swagger UI available at http://localhost:${port}/api/docs`);
   }
@@ -312,12 +333,17 @@ void bootstrap();
 **Goal**: Create the `@Catch()` filter and verify all errors return `{ statusCode, message, error? }`.
 
 **T007** — Create `src/common/filters/global-exception.filter.ts`:
+
 ```typescript
 import {
-  ExceptionFilter, Catch, ArgumentsHost,
-  HttpException, HttpStatus, Logger,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from "@nestjs/common";
+import { Request, Response } from "express";
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -329,21 +355,21 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message = 'Internal server error';
+    let message = "Internal server error";
     let error: string | undefined;
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
-      if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
+      if (typeof exceptionResponse === "object" && exceptionResponse !== null) {
         const body = exceptionResponse as Record<string, unknown>;
         message =
-          typeof body['message'] === 'string'
-            ? body['message']
-            : Array.isArray(body['message'])
-              ? (body['message'] as string[]).join('; ')
+          typeof body["message"] === "string"
+            ? body["message"]
+            : Array.isArray(body["message"])
+              ? (body["message"] as string[]).join("; ")
               : message;
-        error = typeof body['error'] === 'string' ? body['error'] : undefined;
+        error = typeof body["error"] === "string" ? body["error"] : undefined;
       } else {
         message = String(exceptionResponse);
       }
@@ -363,13 +389,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 }
 ```
 
-*(Filter is registered in `main.ts` via T006 — `app.useGlobalFilters(new GlobalExceptionFilter())`)*
+_(Filter is registered in `main.ts` via T006 — `app.useGlobalFilters(new GlobalExceptionFilter())`)_
 
 ---
 
 ### Phase 3 — Common Layer Scaffold
 
 **T008** — Create `src/common/types/request-context.type.ts`:
+
 ```typescript
 /**
  * Shape of the authenticated request context populated by the auth guard.
@@ -389,6 +416,7 @@ export interface IRequestContext {
 ```
 
 **T009** — Create `.gitkeep` files in new `common/` subdirectories:
+
 - `src/common/interceptors/.gitkeep`
 - `src/common/pipes/.gitkeep`
 - `src/common/utils/.gitkeep`
@@ -398,8 +426,9 @@ export interface IRequestContext {
 ### Phase 4 — Business Module Scaffold
 
 **T010** — Create `src/modules/auth/auth.module.ts`:
+
 ```typescript
-import { Module } from '@nestjs/common';
+import { Module } from "@nestjs/common";
 
 /**
  * AuthModule — Bounded context: Identity & Authentication
@@ -418,14 +447,16 @@ export class AuthModule {}
 ```
 
 **T011** — Create layer `.gitkeep` files for `src/modules/auth/`:
+
 - `src/modules/auth/domain/.gitkeep`
 - `src/modules/auth/application/.gitkeep`
 - `src/modules/auth/infrastructure/.gitkeep`
 - `src/modules/auth/presentation/.gitkeep`
 
 **T012** — Create `src/modules/tenants/tenants.module.ts`:
+
 ```typescript
-import { Module } from '@nestjs/common';
+import { Module } from "@nestjs/common";
 
 /**
  * TenantsModule — Bounded context: Organization / Tenant Management
@@ -445,6 +476,7 @@ export class TenantsModule {}
 ```
 
 **T013** — Create layer `.gitkeep` files for `src/modules/tenants/`:
+
 - `src/modules/tenants/domain/.gitkeep`
 - `src/modules/tenants/application/.gitkeep`
 - `src/modules/tenants/infrastructure/.gitkeep`
@@ -455,8 +487,9 @@ export class TenantsModule {}
 ### Phase 5 — Database & Queue Placeholders
 
 **T014** — Create `src/database/prisma/prisma.service.ts`:
+
 ```typescript
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 
 /**
  * PrismaService Placeholder
@@ -476,15 +509,18 @@ export class PrismaService implements OnModuleInit {
   private readonly logger = new Logger(PrismaService.name);
 
   async onModuleInit(): Promise<void> {
-    this.logger.log('PrismaService initialized — placeholder (no DB connection until Feature 005)');
+    this.logger.log(
+      "PrismaService initialized — placeholder (no DB connection until Feature 005)",
+    );
   }
 }
 ```
 
 **T015** — Create `src/database/prisma/prisma.module.ts`:
+
 ```typescript
-import { Global, Module } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { Global, Module } from "@nestjs/common";
+import { PrismaService } from "./prisma.service";
 
 /**
  * DatabaseModule — provides PrismaService globally.
@@ -501,8 +537,9 @@ export class DatabaseModule {}
 ```
 
 **T016** — Create `src/queues/bullmq/bullmq.module.ts`:
+
 ```typescript
-import { Module } from '@nestjs/common';
+import { Module } from "@nestjs/common";
 
 /**
  * QueuesModule Placeholder
@@ -526,16 +563,18 @@ export class QueuesModule {}
 ### Phase 6 — Health Endpoint Update
 
 **T017** — Update `src/modules/health/presentation/dto/health-response.dto.ts` — add `service` field:
+
 ```typescript
 @ApiProperty({ example: 'api', description: 'Service identifier' })
 service!: string;
 ```
 
 **T018** — Update `src/modules/health/health.controller.ts` — add `service: 'api'` to response:
+
 ```typescript
 return {
-  status: 'ok',
-  service: 'api',
+  status: "ok",
+  service: "api",
   timestamp: new Date().toISOString(),
 };
 ```
@@ -545,47 +584,50 @@ return {
 ### Phase 7 — Testing Infrastructure
 
 **T019** — Update `apps/api/package.json` — add Jest devDependencies and test scripts:
+
 - **devDependencies**: `"@nestjs/testing": "^10.0.0"`, `"@types/jest": "^29.0.0"`, `"jest": "^29.0.0"`, `"ts-jest": "^29.0.0"`
 - **scripts**: `"test": "jest"`, `"test:watch": "jest --watch"`, `"test:cov": "jest --coverage"`
 
 **T020** — Create `apps/api/jest.config.ts`:
+
 ```typescript
-import type { Config } from 'jest';
+import type { Config } from "jest";
 
 const config: Config = {
-  moduleFileExtensions: ['js', 'json', 'ts'],
-  rootDir: 'src',
-  testRegex: '.*\\.spec\\.ts$',
-  transform: { '^.+\\.(t|j)s$': 'ts-jest' },
-  collectCoverageFrom: ['**/*.(t|j)s'],
-  coverageDirectory: '../coverage',
-  testEnvironment: 'node',
-  moduleNameMapper: { '^@/(.*)$': '<rootDir>/$1' },
+  moduleFileExtensions: ["js", "json", "ts"],
+  rootDir: "src",
+  testRegex: ".*\\.spec\\.ts$",
+  transform: { "^.+\\.(t|j)s$": "ts-jest" },
+  collectCoverageFrom: ["**/*.(t|j)s"],
+  coverageDirectory: "../coverage",
+  testEnvironment: "node",
+  moduleNameMapper: { "^@/(.*)$": "<rootDir>/$1" },
 };
 
 export default config;
 ```
 
 **T021** — Create `src/modules/health/health.controller.spec.ts`:
-```typescript
-import { HealthController } from './health.controller';
 
-describe('HealthController', () => {
+```typescript
+import { HealthController } from "./health.controller";
+
+describe("HealthController", () => {
   let controller: HealthController;
 
   beforeEach(() => {
     controller = new HealthController();
   });
 
-  it('should return status ok', () => {
-    expect(controller.check().status).toBe('ok');
+  it("should return status ok", () => {
+    expect(controller.check().status).toBe("ok");
   });
 
-  it('should return service as api', () => {
-    expect(controller.check().service).toBe('api');
+  it("should return service as api", () => {
+    expect(controller.check().service).toBe("api");
   });
 
-  it('should return a valid ISO timestamp', () => {
+  it("should return a valid ISO timestamp", () => {
     const result = controller.check();
     expect(new Date(result.timestamp).toISOString()).toBe(result.timestamp);
   });
@@ -611,6 +653,7 @@ describe('HealthController', () => {
 ## Architecture Rules
 
 ### Layer Dependency Rules
+
 ```
 presentation/ → application/    ✓ (controllers call use cases)
 application/  → domain/         ✓ (use cases use domain entities)
@@ -621,6 +664,7 @@ Controller    → PrismaService   ✗ FORBIDDEN (blocking review issue)
 ```
 
 ### Request Context Rules
+
 - `tenantId` MUST come from verified JWT claim — never from client input
 - Every protected endpoint MUST have a guard that populates `req.user: IRequestContext`
 - `IRequestContext.role` MUST be resolved from the application DB, not Clerk claims
@@ -650,15 +694,17 @@ Controller    → PrismaService   ✗ FORBIDDEN (blocking review issue)
 ## Notes for Next Tasks
 
 ### Epic 2 — Clerk Authentication
+
 - Entry points: `src/modules/auth/` (all 4 layers ready), `IRequestContext` defined, `CLERK_SECRET_KEY` + `CLERK_JWKS_URL` in `.env.example`
 - Action: Make `CLERK_SECRET_KEY` and `CLERK_JWKS_URL` required in `validation.schema.ts` when this task starts
 - Action: Replace (or supersede) `StubBearerGuard` with `ClerkJwtGuard` that verifies JWT against JWKS
 
 ### Feature 005 — Prisma ORM
+
 - Entry points: `src/database/prisma/prisma.service.ts` (replace body with `extends PrismaClient`), `DATABASE_URL` already validated at startup
 - Action: Install `@prisma/client`, initialize schema, implement `$connect()` / `$disconnect()`
 
 ### Feature 007 — BullMQ
+
 - Entry points: `src/queues/bullmq/bullmq.module.ts` (add `BullModule.forRootAsync()`), `REDIS_URL` already validated at startup
 - Action: Install `@nestjs/bullmq` + `bullmq`, register domain queues
-

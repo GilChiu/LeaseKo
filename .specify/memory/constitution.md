@@ -67,6 +67,7 @@ Every backend module MUST follow this four-layer structure:
 ```
 
 Rules that MUST be enforced:
+
 - Domain layer MUST NOT import from infrastructure or framework packages.
 - Controllers MUST be thin — they delegate to use cases and return responses.
 - Infrastructure MUST be swappable without touching application or domain layers.
@@ -138,6 +139,7 @@ operations, enabling horizontal scalability and resilient retry semantics.
 ### X. Testing Strategy
 
 Tests are categorised by scope:
+
 - **Unit tests**: Cover all domain and application layer logic in isolation.
   External dependencies MUST be mocked.
 - **Integration tests**: Cover repository implementations and module interactions

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface CardProps {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ export function Card({ children, title, className }: CardProps) {
   return (
     <div
       className={cn(
-        'rounded-lg border border-slate-200 bg-white p-6 shadow-sm',
+        "rounded-lg border border-slate-200 bg-white p-6 shadow-sm",
         className,
       )}
     >

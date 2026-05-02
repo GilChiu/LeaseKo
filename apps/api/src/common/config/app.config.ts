@@ -9,8 +9,8 @@ export interface AppConfig {
 }
 
 export const appConfig = (): AppConfig => ({
-  nodeEnv: process.env.NODE_ENV ?? 'development',
-  port: parseInt(process.env.PORT ?? '3001', 10),
+  nodeEnv: process.env.NODE_ENV ?? "development",
+  port: parseInt(process.env.PORT ?? "3001", 10),
   frontendUrl: process.env.FRONTEND_URL!,
   databaseUrl: process.env.DATABASE_URL!,
   redisUrl: process.env.REDIS_URL!,
