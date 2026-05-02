@@ -47,9 +47,9 @@ As a user, I want to sign up and log in securely.
 
 ### Tasks
 
-- [ ] Install Clerk in Next.js
-- [ ] Implement login/signup UI
-- [ ] Protect frontend routes
+- [/] Install Clerk in Next.js
+- [/] Implement login/signup UI
+- [/] Protect frontend routes
 
 ---
 
