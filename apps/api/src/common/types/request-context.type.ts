@@ -21,8 +21,8 @@ export interface IRequestContext {
 
   /**
    * The tenant the request is scoped to (Clerk organization ID).
-   * Populated from the JWT `org_id` claim (Feature 009).
-   * null until tenant extraction is implemented.
+   * Populated from the Clerk JWT `o.id` claim (compact v2 format).
+   * null when no active organization session.
    */
   tenantId: string | null;
 

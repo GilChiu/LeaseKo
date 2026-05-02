@@ -231,12 +231,16 @@ curl http://localhost:3001/api/v1/auth/me
 curl http://localhost:3001/api/v1/auth/me -H "Authorization: Bearer bad"
 
 # Protected — valid JWT without active org → 403
-curl http://localhost:3001/api/v1/auth/me \
+curl http://localhost:3001/api/v1/tenant-context \
   -H "Authorization: Bearer <token-no-org>"
 
-# Protected — valid Clerk JWT with active org → 200 { userId, tenantId }
+# Protected — valid Clerk JWT with active org → 200 { tenantId }
+curl http://localhost:3001/api/v1/tenant-context \
+  -H "Authorization: Bearer <token-with-org>"
+
+# User-only — valid JWT without org → 200 { userId, tenantId: null }
 curl http://localhost:3001/api/v1/auth/me \
-  -H "Authorization: Bearer <paste-token-here>"
+  -H "Authorization: Bearer <token-no-org>"
 ```
 
 ### Swagger UI
@@ -248,9 +252,11 @@ curl http://localhost:3001/api/v1/auth/me \
 ### Architecture Notes
 
 - `ClerkJwtGuard` is registered via `{ provide: APP_GUARD, useClass: ClerkJwtGuard }` in `AuthModule` — this enables full NestJS DI (ConfigService, VerifyClerkTokenUseCase).
-- `@Public()` decorator marks routes that bypass the guard (e.g. `GET /health`).
-- `@CurrentUser()` param decorator provides typed `IRequestContext` in controllers.
+- `@Public()` decorator marks routes that bypass the guard entirely (e.g. `GET /health`).
+- `@UserOnly()` decorator marks routes that require authentication but not an active organization — used for pre-tenant flows like onboarding.
 - `@RequiresTenant()` decorator enforces an active organization session — routes decorated with it return `403` when `tenantId` is null.
+- `@CurrentUser()` param decorator provides typed `IRequestContext` in controllers.
+- `@CurrentTenant()` param decorator provides `tenantId: string | null` in controllers.
 - `request.user` is always set for authenticated requests; `tenantId` is `null` when no organization is active.
 
 ## Structure
@@ -292,6 +298,14 @@ list(@CurrentUser() user: IRequestContext) {
 @RequiresTenant()
 list(@CurrentTenant() tenantId: string) {
   return this.propertyService.findAll(tenantId);
+}
+
+// Allow access without an active org (onboarding, org-selection flows)
+@Get('onboarding/status')
+@UserOnly()
+status(@CurrentUser() user: IRequestContext) {
+  // user.tenantId may be null — user hasn't joined an org yet
+  return { userId: user.userId, hasOrg: user.tenantId !== null };
 }
 ```
 

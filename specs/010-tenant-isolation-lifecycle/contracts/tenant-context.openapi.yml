@@ -1,0 +1,108 @@
+openapi: "3.0.3"
+info:
+  title: LeaseKo API — Tenant Context Contract
+  description: |
+    Contract for the tenant isolation verification endpoint introduced in Feature 010.
+    This endpoint is a developer-facing diagnostic tool — it confirms that tenant
+    context extraction and enforcement are working correctly end-to-end.
+  version: "1.0.0"
+
+servers:
+  - url: http://localhost:3001/api/v1
+    description: Local development
+
+paths:
+  /tenant-context:
+    get:
+      tags:
+        - tenant-context
+      summary: Get current tenant context
+      description: |
+        Returns the tenantId from the verified request context.
+        Requires a valid Clerk JWT with an active organization session.
+
+        Used to verify that the tenant isolation enforcement chain is working:
+        JWT verification → o.id extraction → @RequiresTenant() guard check → response.
+
+        Does NOT query the database. Does NOT implement business logic.
+      operationId: getTenantContext
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Active tenant context.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TenantContextResponse"
+              example:
+                tenantId: "org_2abc123xyz"
+        "401":
+          description: Missing or invalid Bearer token.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                statusCode: 401
+                message: "Unauthorized"
+                path: "/api/v1/tenant-context"
+                timestamp: "2026-05-03T10:00:00.000Z"
+        "403":
+          description: Authenticated but no active Clerk organization context.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                statusCode: 403
+                message: "Forbidden"
+                path: "/api/v1/tenant-context"
+                timestamp: "2026-05-03T10:00:00.000Z"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Clerk-issued JWT. Obtain from the browser console after signing in:
+        `const token = await window.Clerk.session.getToken(); console.log(token);`
+
+  schemas:
+    TenantContextResponse:
+      type: object
+      required:
+        - tenantId
+      properties:
+        tenantId:
+          type: string
+          description: The verified Clerk organization ID from the JWT o.id claim.
+          example: "org_2abc123xyz"
+
+    ErrorResponse:
+      type: object
+      required:
+        - statusCode
+        - message
+        - path
+        - timestamp
+      properties:
+        statusCode:
+          type: integer
+          example: 403
+        message:
+          type: string
+          example: "Forbidden"
+        error:
+          type: string
+          description: HTTP error category (present for some error types)
+          example: "Forbidden"
+        path:
+          type: string
+          example: "/api/v1/tenant-context"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-05-03T10:00:00.000Z"
