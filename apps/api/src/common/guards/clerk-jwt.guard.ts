@@ -1,12 +1,14 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { Request } from "express";
 import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
+import { IS_TENANT_REQUIRED_KEY } from "../decorators/requires-tenant.decorator";
 import { VerifyClerkTokenUseCase } from "../../modules/auth/application/verify-clerk-token.use-case";
 import { IRequestContext } from "../types/request-context.type";
 
@@ -34,15 +36,24 @@ export class ClerkJwtGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    const userId = await this.verifyClerkToken.execute(token);
+    const { userId, tenantId } = await this.verifyClerkToken.execute(token);
 
     const user: IRequestContext = {
       userId,
-      tenantId: null,
+      tenantId,
       role: null,
     };
 
     (request as Request & { user: IRequestContext }).user = user;
+
+    const isTenantRequired = this.reflector.getAllAndOverride<boolean>(
+      IS_TENANT_REQUIRED_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+
+    if (isTenantRequired && !tenantId) {
+      throw new ForbiddenException();
+    }
 
     return true;
   }

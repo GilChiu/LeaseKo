@@ -59,9 +59,9 @@ As a backend, I want to verify users so that all requests are secure.
 
 ### Tasks
 
-- [ ] Setup Clerk JWT verification in NestJS
-- [ ] Implement Auth Guard
-- [ ] Extract userId from token
+- [/] Setup Clerk JWT verification in NestJS
+- [/] Implement Auth Guard
+- [/] Extract userId from token
 
 ---
 
@@ -71,9 +71,9 @@ As a system, I want request context so that all logic is tenant-aware.
 
 ### Tasks
 
-- [ ] Extract orgId (tenantId) from Clerk
-- [ ] Create request context middleware
-- [ ] Attach userId + tenantId to requests
+- [/] Extract orgId (tenantId) from Clerk
+- [/] Create request context middleware
+- [/] Attach userId + tenantId to requests
 
 ---
 
