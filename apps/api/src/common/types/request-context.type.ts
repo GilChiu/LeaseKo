@@ -13,15 +13,24 @@
  *   into controller methods instead of accessing `req.user` directly.
  */
 export interface IRequestContext {
-  /** The authenticated user's unique identifier (Clerk user ID). */
+  /**
+   * The authenticated user's unique identifier (Clerk user ID).
+   * Populated by ClerkJwtGuard from the verified JWT `sub` claim (Feature 008).
+   */
   userId: string;
 
-  /** The tenant the request is scoped to (Clerk organization ID). */
-  tenantId: string;
+  /**
+   * The tenant the request is scoped to (Clerk organization ID).
+   * Populated from the JWT `org_id` claim (Feature 009).
+   * null until tenant extraction is implemented.
+   */
+  tenantId: string | null;
 
   /**
    * The user's role within the tenant.
-   * Values: 'owner' | 'manager' | 'tenant_user' — defined in Epic 2.
+   * Values: 'owner' | 'manager' | 'tenant_user'.
+   * Populated via database lookup (Feature 010+).
+   * null until role resolution is implemented.
    */
-  role: string;
+  role: string | null;
 }

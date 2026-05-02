@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Req } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -7,7 +7,7 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { Request } from "express";
-import { StubBearerGuard } from "../../common/guards/stub-bearer.guard";
+import { IRequestContext } from "../../common/types/request-context.type";
 import { ErrorResponseDto } from "../../shared/dto/error-response.dto";
 import { MeResponseDto } from "./presentation/dto/me-response.dto";
 
@@ -16,7 +16,6 @@ import { MeResponseDto } from "./presentation/dto/me-response.dto";
 @Controller()
 export class SystemController {
   @Get("me")
-  @UseGuards(StubBearerGuard)
   @ApiOperation({
     summary: "Get current user context",
     description:
@@ -30,7 +29,7 @@ export class SystemController {
     type: ErrorResponseDto,
     description: "Missing or invalid Bearer token",
   })
-  me(@Req() req: Request & { user: MeResponseDto }): MeResponseDto {
-    return req.user;
+  me(@Req() req: Request & { user: IRequestContext }): { userId: string } {
+    return { userId: req.user.userId };
   }
 }

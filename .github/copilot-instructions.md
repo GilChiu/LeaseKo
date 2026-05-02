@@ -2,6 +2,6 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/007-clerk-auth-nextjs/plan.md
+at specs/008-clerk-jwt-nestjs/plan.md
 
 <!-- SPECKIT END -->

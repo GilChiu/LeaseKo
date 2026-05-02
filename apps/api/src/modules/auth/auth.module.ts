@@ -1,18 +1,21 @@
 import { Module } from "@nestjs/common";
+import { APP_GUARD } from "@nestjs/core";
+import { ClerkTokenVerifierService } from "./infrastructure/clerk-token-verifier.service";
+import { VerifyClerkTokenUseCase } from "./application/verify-clerk-token.use-case";
+import { ClerkJwtGuard } from "../../common/guards/clerk-jwt.guard";
+import { AuthController } from "./presentation/auth.controller";
 
-/**
- * AuthModule — Bounded context: Identity & Authentication
- *
- * Epic 2 (Clerk Integration) will populate this module with:
- * - domain/: AuthUser entity, token value objects
- * - application/: VerifyTokenUseCase, GetCurrentUserUseCase
- * - infrastructure/: ClerkJwtStrategy, ClerkWebhookAdapter
- * - presentation/: JwtAuthGuard, ClerkJwtGuard
- *
- * Architecture rules:
- * - ClerkJwtGuard populates IRequestContext on every protected request
- * - tenantId MUST come from the verified JWT — never from request body
- * - No direct Prisma access outside the infrastructure/ layer
- */
-@Module({})
+@Module({
+  providers: [
+    ClerkTokenVerifierService,
+    VerifyClerkTokenUseCase,
+    ClerkJwtGuard,
+    {
+      provide: APP_GUARD,
+      useClass: ClerkJwtGuard,
+    },
+  ],
+  controllers: [AuthController],
+  exports: [VerifyClerkTokenUseCase],
+})
 export class AuthModule {}

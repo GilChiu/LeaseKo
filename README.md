@@ -191,6 +191,63 @@ NEXT_PUBLIC_API_URL=http://localhost:3001
 
 For full setup documentation see [specs/007-clerk-auth-nextjs/quickstart.md](specs/007-clerk-auth-nextjs/quickstart.md).
 
+## Clerk JWT Verification (Backend)
+
+The NestJS API verifies every request against Clerk's JWKS. A global `ClerkJwtGuard` is registered as `APP_GUARD` — all routes require a valid Clerk JWT unless decorated with `@Public()`.
+
+### Required Environment Variable
+
+Add to `apps/api/.env`:
+
+```bash
+CLERK_SECRET_KEY=sk_test_your_secret_here   # same key as the frontend
+```
+
+Obtain from https://dashboard.clerk.com → your application → **API Keys**.  
+**Server-side only** — never expose this key to the browser.
+
+### Get a Test JWT
+
+1. Sign in to the web app at http://localhost:3000
+2. Open the browser console and run:
+
+```js
+const token = await window.Clerk.session.getToken();
+console.log(token);
+```
+
+3. Copy the token for use in `curl` or Swagger.
+
+### Test the Endpoints
+
+```bash
+# Public — no token needed
+curl http://localhost:3001/api/v1/health
+
+# Protected — no token → 401
+curl http://localhost:3001/api/v1/auth/me
+
+# Protected — invalid token → 401
+curl http://localhost:3001/api/v1/auth/me -H "Authorization: Bearer bad"
+
+# Protected — valid Clerk JWT → 200 { userId: "user_..." }
+curl http://localhost:3001/api/v1/auth/me \
+  -H "Authorization: Bearer <paste-token-here>"
+```
+
+### Swagger UI
+
+1. Open http://localhost:3001/api/docs
+2. Click **Authorize** and paste a Clerk JWT
+3. Requests will include the `Authorization: Bearer` header automatically
+
+### Architecture Notes
+
+- `ClerkJwtGuard` is registered via `{ provide: APP_GUARD, useClass: ClerkJwtGuard }` in `AuthModule` — this enables full NestJS DI (ConfigService, VerifyClerkTokenUseCase).
+- `@Public()` decorator marks routes that bypass the guard (e.g. `GET /health`).
+- `@CurrentUser()` param decorator provides typed `IRequestContext` in controllers.
+- `request.user.tenantId` is `null` until Feature 009 extracts the Clerk `org_id` claim.
+
 ## Structure
 
 ```

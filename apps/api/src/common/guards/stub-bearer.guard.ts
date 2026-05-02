@@ -6,6 +6,12 @@ import {
 } from "@nestjs/common";
 import { Request } from "express";
 
+/**
+ * @deprecated Replaced by ClerkJwtGuard (Feature 008).
+ * This guard accepts any Bearer token and sets a stub user — for local
+ * development only. ClerkJwtGuard is now registered as APP_GUARD in
+ * AuthModule and verifies real Clerk JWTs.
+ */
 @Injectable()
 export class StubBearerGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
