@@ -61,12 +61,12 @@
 
 **Purpose**: End-to-end validation that all tooling commands work correctly after the changes above.
 
-- [X] T010 Run `pnpm install` from monorepo root — verify exit 0 and no unresolved dependencies
-- [X] T011 [P] Run `pnpm typecheck` from monorepo root — verify exit 0 and output includes both `@leaseKo/web` and `@leaseKo/api` tasks
-- [X] T012 [P] Run `pnpm lint` from monorepo root — verify exit 0 with zero errors and zero warnings after ESLint config changes
-- [X] T013 [P] Run `pnpm format:check` from monorepo root — verify exit 0 on a clean repository
-- [X] T014 Run `pnpm build` from monorepo root — verify exit 0 and no regressions from config changes
-- [X] T015 Smoke-test NestJS ESLint override: temporarily add `console.log('test')` to `apps/api/src/modules/health/health.controller.ts`, run `pnpm --filter @leaseKo/api lint`, confirm error (not warning) on `no-console`, then remove the line
+- [x] T010 Run `pnpm install` from monorepo root — verify exit 0 and no unresolved dependencies
+- [x] T011 [P] Run `pnpm typecheck` from monorepo root — verify exit 0 and output includes both `@leaseKo/web` and `@leaseKo/api` tasks
+- [x] T012 [P] Run `pnpm lint` from monorepo root — verify exit 0 with zero errors and zero warnings after ESLint config changes
+- [x] T013 [P] Run `pnpm format:check` from monorepo root — verify exit 0 on a clean repository
+- [x] T014 Run `pnpm build` from monorepo root — verify exit 0 and no regressions from config changes
+- [x] T015 Smoke-test NestJS ESLint override: temporarily add `console.log('test')` to `apps/api/src/modules/health/health.controller.ts`, run `pnpm --filter @leaseKo/api lint`, confirm error (not warning) on `no-console`, then remove the line
 
 ---
 
