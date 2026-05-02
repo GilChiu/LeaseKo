@@ -9,6 +9,7 @@ import { Reflector } from "@nestjs/core";
 import { Request } from "express";
 import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
 import { IS_TENANT_REQUIRED_KEY } from "../decorators/requires-tenant.decorator";
+import { IS_USER_ONLY_KEY } from "../decorators/user-only.decorator";
 import { VerifyClerkTokenUseCase } from "../../modules/auth/application/verify-clerk-token.use-case";
 import { IRequestContext } from "../types/request-context.type";
 
@@ -38,13 +39,20 @@ export class ClerkJwtGuard implements CanActivate {
 
     const { userId, tenantId } = await this.verifyClerkToken.execute(token);
 
-    const user: IRequestContext = {
+    (request as Request & { user: IRequestContext }).user = {
       userId,
       tenantId,
       role: null,
     };
 
-    (request as Request & { user: IRequestContext }).user = user;
+    const isUserOnly = this.reflector.getAllAndOverride<boolean>(
+      IS_USER_ONLY_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+
+    if (isUserOnly) {
+      return true;
+    }
 
     const isTenantRequired = this.reflector.getAllAndOverride<boolean>(
       IS_TENANT_REQUIRED_KEY,

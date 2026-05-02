@@ -1,14 +1,13 @@
 import { Controller, Get } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { CurrentUser } from "../../../common/decorators/current-user.decorator";
-import { RequiresTenant } from "../../../common/decorators/requires-tenant.decorator";
+import { UserOnly } from "../../../common/decorators/user-only.decorator";
 import { IRequestContext } from "../../../common/types/request-context.type";
 
 @ApiTags("auth")
@@ -16,19 +15,22 @@ import { IRequestContext } from "../../../common/types/request-context.type";
 @Controller("auth")
 export class AuthController {
   @Get("me")
-  @RequiresTenant()
-  @ApiOperation({ summary: "Get current user and tenant context" })
+  @UserOnly()
+  @ApiOperation({ summary: "Get current user context" })
   @ApiOkResponse({
-    description: "Authenticated user and tenant context.",
-    schema: { example: { userId: "user_2abc123", tenantId: "org_456xyz" } },
+    description: "Authenticated user context. tenantId is null when no active organization.",
+    schema: {
+      example: { userId: "user_2abc123", tenantId: "org_456xyz" },
+      properties: {
+        userId: { type: "string" },
+        tenantId: { type: "string", nullable: true },
+      },
+    },
   })
   @ApiUnauthorizedResponse({ description: "Missing or invalid Bearer token." })
-  @ApiForbiddenResponse({
-    description: "Authenticated but no active organization context.",
-  })
   me(
     @CurrentUser() user: IRequestContext,
-  ): { userId: string; tenantId: string } {
-    return { userId: user.userId, tenantId: user.tenantId as string };
+  ): { userId: string; tenantId: string | null } {
+    return { userId: user.userId, tenantId: user.tenantId };
   }
 }

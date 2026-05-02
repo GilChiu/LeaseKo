@@ -6,6 +6,7 @@ import { HealthModule } from "./modules/health/health.module";
 import { SystemModule } from "./modules/system/system.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { TenantsModule } from "./modules/tenants/tenants.module";
+import { TenantContextModule } from "./modules/tenant-context/tenant-context.module";
 import { DatabaseModule } from "./database/prisma/prisma.module";
 import { QueuesModule } from "./queues/bullmq/bullmq.module";
 
@@ -24,6 +25,7 @@ import { QueuesModule } from "./queues/bullmq/bullmq.module";
     SystemModule,
     AuthModule,
     TenantsModule,
+    TenantContextModule,
     DatabaseModule,
     QueuesModule,
   ],
