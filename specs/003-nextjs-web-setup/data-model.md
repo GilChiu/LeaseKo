@@ -8,6 +8,7 @@
 ## Scope
 
 This feature introduces **no database tables, no Prisma schema changes, and no backend entities**. All data structures are frontend-only TypeScript types used for:
+
 1. API response typing (mirroring backend DTOs)
 2. Prop typing for UI components
 3. Environment configuration shape
@@ -23,9 +24,9 @@ These are not persisted — they exist only as TypeScript interfaces for type sa
 **Location**: `apps/web/src/lib/api.ts` (class)
 **Purpose**: Thrown by `apiFetch` on non-2xx responses. Mirrors the NestJS `ErrorResponseDto` shape so frontend code can display consistent errors.
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `status` | `number` | HTTP status code from the API response |
+| Field     | Type     | Description                               |
+| --------- | -------- | ----------------------------------------- |
+| `status`  | `number` | HTTP status code from the API response    |
 | `message` | `string` | Human-readable error message from the API |
 
 ---
@@ -35,9 +36,9 @@ These are not persisted — they exist only as TypeScript interfaces for type sa
 **Location**: `apps/web/src/lib/env.ts` (exported constants)
 **Purpose**: Validated environment variables, read once at module load.
 
-| Export | Type | Required | Description |
-|--------|------|----------|-------------|
-| `API_URL` | `string` | Yes | Base URL for the NestJS API (`NEXT_PUBLIC_API_URL`) |
+| Export                  | Type     | Required          | Description                                                                      |
+| ----------------------- | -------- | ----------------- | -------------------------------------------------------------------------------- |
+| `API_URL`               | `string` | Yes               | Base URL for the NestJS API (`NEXT_PUBLIC_API_URL`)                              |
 | `CLERK_PUBLISHABLE_KEY` | `string` | No (empty in dev) | Clerk publishable key (`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`) — required in Epic 2 |
 
 ---
@@ -48,33 +49,33 @@ These are the prop shapes for the three placeholder components in `src/component
 
 #### ButtonProps
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `children` | `React.ReactNode` | Yes | Button label or content |
-| `variant` | `'primary' \| 'secondary' \| 'ghost'` | No (default: `'primary'`) | Visual style variant |
-| `size` | `'sm' \| 'md' \| 'lg'` | No (default: `'md'`) | Button size |
-| `disabled` | `boolean` | No | Disabled state |
-| `onClick` | `() => void` | No | Click handler |
-| `type` | `'button' \| 'submit' \| 'reset'` | No (default: `'button'`) | HTML button type |
-| `className` | `string` | No | Additional Tailwind classes |
+| Prop        | Type                                  | Required                  | Description                 |
+| ----------- | ------------------------------------- | ------------------------- | --------------------------- |
+| `children`  | `React.ReactNode`                     | Yes                       | Button label or content     |
+| `variant`   | `'primary' \| 'secondary' \| 'ghost'` | No (default: `'primary'`) | Visual style variant        |
+| `size`      | `'sm' \| 'md' \| 'lg'`                | No (default: `'md'`)      | Button size                 |
+| `disabled`  | `boolean`                             | No                        | Disabled state              |
+| `onClick`   | `() => void`                          | No                        | Click handler               |
+| `type`      | `'button' \| 'submit' \| 'reset'`     | No (default: `'button'`)  | HTML button type            |
+| `className` | `string`                              | No                        | Additional Tailwind classes |
 
 #### CardProps
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `children` | `React.ReactNode` | Yes | Card content |
-| `className` | `string` | No | Additional Tailwind classes |
-| `title` | `string` | No | Optional card header title |
+| Prop        | Type              | Required | Description                 |
+| ----------- | ----------------- | -------- | --------------------------- |
+| `children`  | `React.ReactNode` | Yes      | Card content                |
+| `className` | `string`          | No       | Additional Tailwind classes |
+| `title`     | `string`          | No       | Optional card header title  |
 
 #### InputProps
 
 Extends `React.InputHTMLAttributes<HTMLInputElement>` plus:
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `label` | `string` | No | Input label text |
-| `error` | `string` | No | Error message text (shown below input) |
-| `className` | `string` | No | Additional Tailwind classes |
+| Prop        | Type     | Required | Description                            |
+| ----------- | -------- | -------- | -------------------------------------- |
+| `label`     | `string` | No       | Input label text                       |
+| `error`     | `string` | No       | Error message text (shown below input) |
+| `className` | `string` | No       | Additional Tailwind classes            |
 
 ---
 

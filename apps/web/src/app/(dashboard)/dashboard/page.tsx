@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card';
+import { Card } from "@/components/ui/card";
 
 export default function DashboardPage() {
   return (
@@ -6,7 +6,8 @@ export default function DashboardPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
         <p className="text-sm text-slate-500 mt-1">
-          Welcome to LeaseKo. Your property management overview will appear here.
+          Welcome to LeaseKo. Your property management overview will appear
+          here.
         </p>
       </div>
 

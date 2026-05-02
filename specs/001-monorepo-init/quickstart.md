@@ -10,14 +10,15 @@
 
 Before you begin, ensure the following are installed:
 
-| Tool | Minimum Version | Install |
-|------|----------------|---------|
-| Node.js | 20 LTS | https://nodejs.org |
-| pnpm | 9.x | `npm install -g pnpm` |
-| Docker Desktop | latest | https://www.docker.com/products/docker-desktop |
-| Git | any | https://git-scm.com |
+| Tool           | Minimum Version | Install                                        |
+| -------------- | --------------- | ---------------------------------------------- |
+| Node.js        | 20 LTS          | https://nodejs.org                             |
+| pnpm           | 9.x             | `npm install -g pnpm`                          |
+| Docker Desktop | latest          | https://www.docker.com/products/docker-desktop |
+| Git            | any             | https://git-scm.com                            |
 
 Verify:
+
 ```bash
 node --version   # v20.x.x
 pnpm --version   # 9.x.x
@@ -59,6 +60,7 @@ docker ps   # both containers should show "healthy"
 ```
 
 To stop infrastructure:
+
 ```bash
 pnpm db:down
 ```
@@ -71,12 +73,12 @@ pnpm dev
 
 Turborepo starts all apps in parallel. Once ready:
 
-| App | URL |
-|-----|-----|
-| Next.js frontend | http://localhost:3000 |
-| NestJS API | http://localhost:3001 |
+| App              | URL                          |
+| ---------------- | ---------------------------- |
+| Next.js frontend | http://localhost:3000        |
+| NestJS API       | http://localhost:3001        |
 | API health check | http://localhost:3001/health |
-| Adminer (DB GUI) | http://localhost:8080 |
+| Adminer (DB GUI) | http://localhost:8080        |
 
 ---
 
@@ -141,49 +143,54 @@ LeaseKo/
 
 ### Root `.env`
 
-| Variable | Default | Description |
-|----------|---------|-------------|
+| Variable       | Default                                                 | Description               |
+| -------------- | ------------------------------------------------------- | ------------------------- |
 | `DATABASE_URL` | `postgresql://postgres:postgres@localhost:5432/leaseKo` | PostgreSQL connection URL |
-| `REDIS_URL` | `redis://localhost:6379` | Redis connection URL |
+| `REDIS_URL`    | `redis://localhost:6379`                                | Redis connection URL      |
 
 ### apps/api
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PORT` | `3001` | NestJS HTTP server port |
-| `NODE_ENV` | `development` | Runtime environment |
-| `DATABASE_URL` | (from root) | PostgreSQL connection URL |
-| `REDIS_URL` | (from root) | Redis connection URL |
+| Variable       | Default       | Description               |
+| -------------- | ------------- | ------------------------- |
+| `PORT`         | `3001`        | NestJS HTTP server port   |
+| `NODE_ENV`     | `development` | Runtime environment       |
+| `DATABASE_URL` | (from root)   | PostgreSQL connection URL |
+| `REDIS_URL`    | (from root)   | Redis connection URL      |
 
 ### apps/web
 
-| Variable | Default | Description |
-|----------|---------|-------------|
+| Variable              | Default                 | Description                 |
+| --------------------- | ----------------------- | --------------------------- |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:3001` | Base URL for the NestJS API |
-| `NODE_ENV` | `development` | Runtime environment |
+| `NODE_ENV`            | `development`           | Runtime environment         |
 
 ---
 
 ## Troubleshooting
 
 ### `pnpm install` fails
+
 - Ensure Node.js v20+ is installed: `node --version`
 - Clear pnpm cache: `pnpm store prune`
 
 ### Docker containers won't start
+
 - Ensure Docker Desktop is running
 - Check if ports 5432 or 6379 are already in use: `netstat -ano | findstr :5432`
 - Stop conflicting services or change the port in `infra/docker-compose.yml` and `.env`
 
 ### NestJS starts on wrong port
+
 - Ensure `PORT=3001` is set in `.env` or `apps/api/.env`
 - Next.js defaults to 3000 and will try 3001 if 3000 is taken — always start NestJS explicitly on 3001
 
 ### Turborepo cache not working
+
 - Verify `turbo.json` `outputs` paths match the actual build output directories
 - Run `pnpm build --force` to bypass cache on a clean build
 
 ### `pnpm dev` shows no output for an app
+
 - Check if the app's `package.json` has a `dev` script
 - Run the app directly: `pnpm --filter @leaseKo/api dev`
 

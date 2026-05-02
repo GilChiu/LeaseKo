@@ -5,8 +5,8 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
+} from "@nestjs/common";
+import { Request, Response } from "express";
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -18,22 +18,22 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message = 'Internal server error';
+    let message = "Internal server error";
     let error: string | undefined;
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
 
-      if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
+      if (typeof exceptionResponse === "object" && exceptionResponse !== null) {
         const body = exceptionResponse as Record<string, unknown>;
         message =
-          typeof body['message'] === 'string'
-            ? body['message']
-            : Array.isArray(body['message'])
-              ? (body['message'] as string[]).join('; ')
+          typeof body["message"] === "string"
+            ? body["message"]
+            : Array.isArray(body["message"])
+              ? (body["message"] as string[]).join("; ")
               : message;
-        error = typeof body['error'] === 'string' ? body['error'] : undefined;
+        error = typeof body["error"] === "string" ? body["error"] : undefined;
       } else {
         message = String(exceptionResponse);
       }

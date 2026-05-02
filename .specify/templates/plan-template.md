@@ -29,39 +29,46 @@
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 **Architecture**
+
 - [ ] Module follows four-layer Clean Architecture: `domain / application / infrastructure / presentation`
 - [ ] Domain layer imports no NestJS or Prisma packages
 - [ ] Controllers are thin — all logic delegated to use cases
 - [ ] Cross-module interaction uses explicit interfaces or events only (no direct internal imports)
 
 **Multi-Tenancy (CRITICAL)**
+
 - [ ] All new DB tables include `tenant_id` column with index
 - [ ] All repository queries filter by `tenant_id` — no unscoped queries
 - [ ] Request context (`userId`, `tenantId`, `role`) is injected via guard before any business logic
 
 **Authentication & Authorization**
+
 - [ ] Clerk JWT is verified against JWKS — client-supplied identity is never trusted
 - [ ] Role/permission checks are enforced in backend guards, not in frontend
 
 **Data Layer**
+
 - [ ] All DB access goes through repository interfaces (no direct Prisma usage in application/domain/presentation)
 - [ ] Prisma schema changes include `tenant_id` index on affected models
 
 **API & Async**
+
 - [ ] All new endpoints are documented with Swagger/OpenAPI decorators
 - [ ] All DTOs use `class-validator` decorators for strict validation
 - [ ] Heavy/non-critical operations are offloaded to BullMQ with `tenantId` + `userId` in job payload
 - [ ] BullMQ jobs are idempotent
 
 **Testing**
+
 - [ ] Unit tests cover domain and application layer logic
 - [ ] Integration tests cover repository and module interactions
 - [ ] E2E tests cover new API endpoints with auth + tenant context
 
 **Security**
+
 - [ ] No secrets or credentials in source code
 - [ ] Rate limiting applied to new public-facing endpoints
 - [ ] All inputs validated and sanitised before processing
@@ -81,6 +88,7 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
+
 <!--
   ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
   for this feature. Delete unused options and expand the chosen structure with
@@ -131,7 +139,7 @@ directories captured above]
 
 > **Fill ONLY if Constitution Check has violations that must be justified**
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| Violation                  | Why Needed         | Simpler Alternative Rejected Because |
+| -------------------------- | ------------------ | ------------------------------------ |
+| [e.g., 4th project]        | [current need]     | [why 3 projects insufficient]        |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient]  |

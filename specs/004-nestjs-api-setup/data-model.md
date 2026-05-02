@@ -21,9 +21,9 @@ Represents the authenticated caller's identity attached to every request by the 
 // src/common/types/request-context.type.ts
 
 export interface IRequestContext {
-  userId: string;    // Clerk sub claim from verified JWT (stub: 'stub_user_001')
-  tenantId: string;  // Clerk org_id claim mapped to tenant (stub: 'stub_tenant_001')
-  role: string;      // Resolved from application DB after JWT verification (stub: 'stub')
+  userId: string; // Clerk sub claim from verified JWT (stub: 'stub_user_001')
+  tenantId: string; // Clerk org_id claim mapped to tenant (stub: 'stub_tenant_001')
+  role: string; // Resolved from application DB after JWT verification (stub: 'stub')
 }
 ```
 
@@ -41,13 +41,13 @@ Represents the validated, typed environment configuration read at startup.
 // src/common/config/app.config.ts
 
 export interface AppConfig {
-  nodeEnv: string;               // NODE_ENV — 'development' | 'production' | 'test'
-  port: number;                  // PORT — API HTTP port (default: 3001)
-  frontendUrl: string;           // FRONTEND_URL — CORS allowed origin
-  databaseUrl: string;           // DATABASE_URL — PostgreSQL connection string
-  redisUrl: string;              // REDIS_URL — Redis connection string
-  clerkSecretKey: string | undefined;  // CLERK_SECRET_KEY — optional until Epic 2
-  clerkJwksUrl: string | undefined;    // CLERK_JWKS_URL — optional until Epic 2
+  nodeEnv: string; // NODE_ENV — 'development' | 'production' | 'test'
+  port: number; // PORT — API HTTP port (default: 3001)
+  frontendUrl: string; // FRONTEND_URL — CORS allowed origin
+  databaseUrl: string; // DATABASE_URL — PostgreSQL connection string
+  redisUrl: string; // REDIS_URL — Redis connection string
+  clerkSecretKey: string | undefined; // CLERK_SECRET_KEY — optional until Epic 2
+  clerkJwksUrl: string | undefined; // CLERK_JWKS_URL — optional until Epic 2
 }
 ```
 
@@ -79,9 +79,9 @@ Shape of every API error response (4xx and 5xx).
 // src/modules/health/presentation/dto/health-response.dto.ts (UPDATED in this feature)
 
 {
-  status: string;     // Always 'ok' when the endpoint responds
-  service: string;    // Always 'api' — identifies the service
-  timestamp: string;  // ISO 8601 UTC timestamp of the response
+  status: string; // Always 'ok' when the endpoint responds
+  service: string; // Always 'api' — identifies the service
+  timestamp: string; // ISO 8601 UTC timestamp of the response
 }
 ```
 
@@ -102,13 +102,13 @@ All future entities will carry a `tenant_id` foreign key as mandated by the cons
 
 ## Module Ownership Map
 
-| Module | Bounded Context | DB Entity (Future) |
-|---|---|---|
-| `auth` | Identity & authentication | `User` |
-| `tenants` | Organization/tenant management | `Tenant` |
-| `health` | System observability | None |
-| `system` | Developer/debug utilities | None |
-| `database` | Data access infrastructure | N/A |
-| `queues` | Async job processing infrastructure | N/A |
+| Module     | Bounded Context                     | DB Entity (Future) |
+| ---------- | ----------------------------------- | ------------------ |
+| `auth`     | Identity & authentication           | `User`             |
+| `tenants`  | Organization/tenant management      | `Tenant`           |
+| `health`   | System observability                | None               |
+| `system`   | Developer/debug utilities           | None               |
+| `database` | Data access infrastructure          | N/A                |
+| `queues`   | Async job processing infrastructure | N/A                |
 
 Future modules (properties, units, leases, payments, etc.) will be scaffolded in later features following the same four-layer pattern established here.

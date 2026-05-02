@@ -4,11 +4,11 @@ Property Management SaaS — multi-tenant platform for managing properties, unit
 
 ## Prerequisites
 
-| Tool | Version |
-|------|---------|
-| Node.js | >= 20 LTS |
-| pnpm | >= 9 |
-| Docker Desktop | latest |
+| Tool           | Version   |
+| -------------- | --------- |
+| Node.js        | >= 20 LTS |
+| pnpm           | >= 9      |
+| Docker Desktop | latest    |
 
 ## Quickstart
 
@@ -28,12 +28,12 @@ pnpm dev
 
 ## Apps
 
-| App | URL | Description |
-|-----|-----|-------------|
-| Web (Next.js) | http://localhost:3000 | Frontend |
-| API (NestJS) | http://localhost:3001 | Backend |
-| Health check | http://localhost:3001/health | API liveness |
-| Adminer | http://localhost:8080 | Database GUI |
+| App           | URL                          | Description  |
+| ------------- | ---------------------------- | ------------ |
+| Web (Next.js) | http://localhost:3000        | Frontend     |
+| API (NestJS)  | http://localhost:3001        | Backend      |
+| Health check  | http://localhost:3001/health | API liveness |
+| Adminer       | http://localhost:8080        | Database GUI |
 
 ## Workspace Commands
 

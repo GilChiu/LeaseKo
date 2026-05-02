@@ -19,19 +19,19 @@ While there are no persisted entities, the following configuration structures de
 
 ### Environment Variables (apps/api)
 
-| Variable | Type | Purpose | Required |
-|----------|------|---------|---------|
-| `PORT` | integer | Port for the NestJS HTTP server | Yes |
-| `NODE_ENV` | string (`development` / `production` / `test`) | Runtime environment flag | Yes |
-| `DATABASE_URL` | string (PostgreSQL connection URL) | Prisma database connection (used in future Epic 4) | Yes (provisioned) |
-| `REDIS_URL` | string (Redis connection URL) | Redis connection (used in future Epic 9) | Yes (provisioned) |
+| Variable       | Type                                           | Purpose                                            | Required          |
+| -------------- | ---------------------------------------------- | -------------------------------------------------- | ----------------- |
+| `PORT`         | integer                                        | Port for the NestJS HTTP server                    | Yes               |
+| `NODE_ENV`     | string (`development` / `production` / `test`) | Runtime environment flag                           | Yes               |
+| `DATABASE_URL` | string (PostgreSQL connection URL)             | Prisma database connection (used in future Epic 4) | Yes (provisioned) |
+| `REDIS_URL`    | string (Redis connection URL)                  | Redis connection (used in future Epic 9)           | Yes (provisioned) |
 
 ### Environment Variables (apps/web)
 
-| Variable | Type | Purpose | Required |
-|----------|------|---------|---------|
-| `NEXT_PUBLIC_API_URL` | string (URL) | Base URL of the NestJS API | Yes |
-| `NODE_ENV` | string | Runtime environment flag | Yes |
+| Variable              | Type         | Purpose                    | Required |
+| --------------------- | ------------ | -------------------------- | -------- |
+| `NEXT_PUBLIC_API_URL` | string (URL) | Base URL of the NestJS API | Yes      |
+| `NODE_ENV`            | string       | Runtime environment flag   | Yes      |
 
 > All `NEXT_PUBLIC_*` variables are inlined at build time by Next.js and exposed to the browser. Non-public variables are server-only.
 

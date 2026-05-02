@@ -46,10 +46,10 @@ Returns the liveness status of the API. Used by infrastructure health probes, up
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `status` | `string` | Always `"ok"` when the endpoint responds |
-| `timestamp` | `string` | ISO 8601 UTC timestamp of the response |
+| Field       | Type     | Description                              |
+| ----------- | -------- | ---------------------------------------- |
+| `status`    | `string` | Always `"ok"` when the endpoint responds |
+| `timestamp` | `string` | ISO 8601 UTC timestamp of the response   |
 
 ---
 

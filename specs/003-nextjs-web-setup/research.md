@@ -15,6 +15,7 @@
 **Tailwind v3 (not v4)**: v4 has a completely different configuration API (CSS-based config instead of `tailwind.config.ts`). It is not yet stable for production use and would require different setup steps. v3 is the established, well-documented default.
 
 **Alternatives considered**:
+
 - `tailwind.config.js` — works but inconsistent with TypeScript-first project.
 - `postcss.config.js` (CJS) — also works but `.mjs` is cleaner with Next.js 14's ESM-leaning defaults.
 - CSS Modules only — rejected; utility-first CSS is the project's standard (aligns with future component library work).
@@ -30,6 +31,7 @@
 **Future consideration**: If env surface grows beyond 5 vars or includes non-string types (numbers, booleans, URLs requiring format validation), migrate to `zod` schema or `t3-env`. The migration is trivial — just replace the manual checks with a `z.object({...}).parse(process.env)`.
 
 **Alternatives considered**:
+
 - **Zod schema** — correct choice for many vars or complex types. Adds ~12KB. Overkill for 1–2 string vars at this stage.
 - **t3-env** — best DX (type-safe, split server/client schemas, build-time checking). Appropriate when the env surface is large. Not warranted here.
 - **No validation** — rejected; silent `undefined` base URL in production is a hard-to-debug failure mode.
@@ -45,6 +47,7 @@
 **Error handling**: On non-2xx, attempt to parse the body as JSON (matching `{ statusCode, message, error }` from `ErrorResponseDto`). Fall back to status text. Throw `new ApiError(status, message)`. Callers catch this and display user-friendly messages.
 
 **Alternatives considered**:
+
 - **Class with constructor** — awkward in Server Components where module-level instantiation timing is unclear. No benefit over a plain function with one base URL.
 - **Factory pattern** — adds indirection with no benefit. Warranted when you need multiple configured API instances; LeaseKo has one backend.
 - **`axios`** — unnecessary dependency; `fetch` is native in Node 18+ and Next.js 14.
@@ -61,6 +64,7 @@
 **Planned domains** (from spec and BACKLOG): `auth`, `dashboard`, `properties`, `units`, `tenants`, `leases`, `payments`. All 7 pre-created as empty directories.
 
 **Alternatives considered**:
+
 - **Atomic design** (atoms/molecules/organisms) — organizes by UI abstraction, not domain. "Where does PropertyCard go?" becomes ambiguous at scale.
 - **Everything in `src/app/`** — Next.js allows co-locating non-route files in `app/`. Rejected; conflates routing structure with domain structure.
 - **Flat `src/components/`** — no natural grouping for domain logic (hooks, API calls). Degrades as feature count grows.
@@ -76,5 +80,6 @@
 **Dashboard page**: A `dashboard/page.tsx` inside `(dashboard)/` renders at `/dashboard`. This is the canonical protected entry point. A `page.tsx` in `(dashboard)/` directly would also work but placing it in a named subdirectory (`dashboard/`) keeps the route explicit and aligns with future routes like `/dashboard/properties`, `/dashboard/units`, etc.
 
 **Alternatives considered**:
+
 - A single layout with conditional auth check — rejected; mixing public and protected layout in one file is fragile and hard to replace with Clerk's server-side patterns.
 - `middleware.ts` for auth routing — this is Epic 2's approach (Clerk's `clerkMiddleware`). Not added in this feature to avoid prematurely committing to a specific Clerk configuration.

@@ -12,12 +12,15 @@
 **Purpose**: Public liveness probe. No authentication required.
 
 **Request**
+
 ```
 GET /api/v1/health
 ```
+
 No headers, query parameters, or body required.
 
 **Response — 200 OK**
+
 ```json
 {
   "status": "ok",
@@ -26,11 +29,11 @@ No headers, query parameters, or body required.
 }
 ```
 
-| Field | Type | Description |
-|---|---|---|
-| `status` | `string` | Always `"ok"` when the endpoint responds. |
-| `service` | `string` | Always `"api"` — identifies the service instance. |
-| `timestamp` | `string` | ISO 8601 UTC timestamp at time of response. |
+| Field       | Type     | Description                                       |
+| ----------- | -------- | ------------------------------------------------- |
+| `status`    | `string` | Always `"ok"` when the endpoint responds.         |
+| `service`   | `string` | Always `"api"` — identifies the service instance. |
+| `timestamp` | `string` | ISO 8601 UTC timestamp at time of response.       |
 
 **No error responses.** If the process is down, the client receives a connection error.
 
@@ -48,11 +51,11 @@ No headers, query parameters, or body required.
 }
 ```
 
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `statusCode` | `number` | Yes | HTTP status code (400, 401, 403, 404, 500, etc.) |
-| `message` | `string` | Yes | Human-readable error summary. For validation errors, lists the first failing constraint. |
-| `error` | `string` | No | Short error category (e.g., `"Bad Request"`, `"Unauthorized"`). |
+| Field        | Type     | Required | Description                                                                              |
+| ------------ | -------- | -------- | ---------------------------------------------------------------------------------------- |
+| `statusCode` | `number` | Yes      | HTTP status code (400, 401, 403, 404, 500, etc.)                                         |
+| `message`    | `string` | Yes      | Human-readable error summary. For validation errors, lists the first failing constraint. |
+| `error`      | `string` | No       | Short error category (e.g., `"Bad Request"`, `"Unauthorized"`).                          |
 
 **Common status codes**:
 | Code | Cause |
@@ -73,12 +76,14 @@ No headers, query parameters, or body required.
 **Purpose**: Returns the request context for the authenticated caller. Used to verify that the auth guard is working.
 
 **Request**
+
 ```
 GET /api/v1/me
 Authorization: Bearer <any-non-empty-token>
 ```
 
 **Response — 200 OK**
+
 ```json
 {
   "userId": "stub_user_001",
@@ -87,6 +92,7 @@ Authorization: Bearer <any-non-empty-token>
 ```
 
 **Response — 401 Unauthorized**
+
 ```json
 {
   "statusCode": 401,
@@ -105,13 +111,14 @@ Defines the shape attached to every authenticated request by the auth guard.
 
 ```typescript
 interface IRequestContext {
-  userId: string;   // Clerk sub claim
+  userId: string; // Clerk sub claim
   tenantId: string; // Clerk org_id mapped to tenantId
-  role: string;     // Resolved from application DB
+  role: string; // Resolved from application DB
 }
 ```
 
 **Extended Express Request type**:
+
 ```typescript
 // Usage in controllers:
 @Get('example')
@@ -133,10 +140,10 @@ Swagger UI is available at `/api/docs` (development only, bypasses global prefix
 
 ## 6. CORS Policy
 
-| Environment | Allowed Origin |
-|---|---|
+| Environment | Allowed Origin                               |
+| ----------- | -------------------------------------------- |
 | Development | `http://localhost:3000` (Next.js dev server) |
-| Production | Value of `FRONTEND_URL` environment variable |
+| Production  | Value of `FRONTEND_URL` environment variable |
 
 All cross-origin requests from origins other than the configured `FRONTEND_URL` are rejected at the HTTP layer.
 
@@ -144,9 +151,9 @@ All cross-origin requests from origins other than the configured `FRONTEND_URL` 
 
 ## Future Contracts (Next Features)
 
-| Feature | Endpoints |
-|---|---|
-| Epic 2 — Clerk Auth | `POST /api/v1/auth/verify`, JWT-protected endpoints |
-| Feature 005 — Prisma | Internal only; no new endpoints |
-| Epic 3 — Tenants | `GET /api/v1/tenants/me`, `PATCH /api/v1/tenants/me` |
-| Epic 4 — Properties | `GET/POST /api/v1/properties`, `GET/PATCH/DELETE /api/v1/properties/:id` |
+| Feature              | Endpoints                                                                |
+| -------------------- | ------------------------------------------------------------------------ |
+| Epic 2 — Clerk Auth  | `POST /api/v1/auth/verify`, JWT-protected endpoints                      |
+| Feature 005 — Prisma | Internal only; no new endpoints                                          |
+| Epic 3 — Tenants     | `GET /api/v1/tenants/me`, `PATCH /api/v1/tenants/me`                     |
+| Epic 4 — Properties  | `GET/POST /api/v1/properties`, `GET/PATCH/DELETE /api/v1/properties/:id` |

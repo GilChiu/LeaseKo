@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module } from "@nestjs/common";
 
 /**
  * TenantsModule — Bounded context: Organization / Tenant Management

@@ -4,6 +4,7 @@
   "private": true,
   "exports": {
     "./eslint": "./eslint/index.js",
+    "./eslint/nestjs": "./eslint/nestjs.js",
     "./tsconfig/base.json": "./tsconfig/base.json",
     "./tsconfig/nextjs.json": "./tsconfig/nextjs.json",
     "./tsconfig/nestjs.json": "./tsconfig/nestjs.json"

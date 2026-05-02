@@ -20,13 +20,13 @@ apiFetch<T = unknown>(path: string, options?: RequestInit & { token?: string }):
 
 ### Behaviour
 
-| Scenario | Outcome |
-|----------|---------|
-| 2xx response | Parses body as JSON, returns typed `T` |
+| Scenario         | Outcome                                                                     |
+| ---------------- | --------------------------------------------------------------------------- |
+| 2xx response     | Parses body as JSON, returns typed `T`                                      |
 | Non-2xx response | Throws `ApiError` with `status` and `message` from the parsed response body |
-| Network failure | Propagates the native `TypeError` from `fetch` |
-| `token` provided | Injects `Authorization: Bearer <token>` header |
-| `token` absent | Sends request without Authorization header |
+| Network failure  | Propagates the native `TypeError` from `fetch`                              |
+| `token` provided | Injects `Authorization: Bearer <token>` header                              |
+| `token` absent   | Sends request without Authorization header                                  |
 
 ### `ApiError` Class
 
@@ -41,10 +41,10 @@ class ApiError extends Error {
 
 ```typescript
 // Public call
-const health = await apiFetch<{ status: string }>('/health');
+const health = await apiFetch<{ status: string }>("/health");
 
 // Authenticated call (Epic 2)
-const me = await apiFetch<MeResponse>('/me', { token: clerkToken });
+const me = await apiFetch<MeResponse>("/me", { token: clerkToken });
 ```
 
 ### Contract Rules
@@ -64,7 +64,7 @@ const me = await apiFetch<MeResponse>('/me', { token: clerkToken });
 ### Exports
 
 ```typescript
-export const API_URL: string;            // NEXT_PUBLIC_API_URL (required)
+export const API_URL: string; // NEXT_PUBLIC_API_URL (required)
 export const CLERK_PUBLISHABLE_KEY: string; // NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY (optional)
 ```
 
@@ -89,16 +89,17 @@ export const CLERK_PUBLISHABLE_KEY: string; // NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 ```typescript
 interface ButtonProps {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
   disabled?: boolean;
   onClick?: () => void;
-  type?: 'button' | 'submit' | 'reset';
+  type?: "button" | "submit" | "reset";
   className?: string;
 }
 ```
 
 **Variant styles**:
+
 - `primary`: solid background (brand color via Tailwind), white text
 - `secondary`: outline border, brand color text
 - `ghost`: no background or border, brand color text

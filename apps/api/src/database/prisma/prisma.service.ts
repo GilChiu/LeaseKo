@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 
 /**
  * PrismaService Placeholder
@@ -20,7 +20,7 @@ export class PrismaService implements OnModuleInit {
 
   async onModuleInit(): Promise<void> {
     this.logger.log(
-      'PrismaService initialized — placeholder (no DB connection until Feature 005)',
+      "PrismaService initialized — placeholder (no DB connection until Feature 005)",
     );
   }
 }

@@ -4,7 +4,7 @@
 **Created**: 2026-05-02
 **Status**: Draft
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Developer Environment Bootstrap (Priority: P1)
 
@@ -79,7 +79,7 @@ A developer updates a shared lint rule or TypeScript base config and expects the
 
 ---
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -108,7 +108,7 @@ A developer updates a shared lint rule or TypeScript base config and expects the
 
 ---
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
