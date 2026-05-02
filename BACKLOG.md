@@ -85,9 +85,9 @@ As a system, I want tenant isolation so that user data is secure.
 
 ### Tasks
 
-- [ ] Define tenantId strategy
-- [ ] Enforce tenantId in request lifecycle
-- [ ] Prevent requests without tenantId
+- [/] Define tenantId strategy
+- [/] Enforce tenantId in request lifecycle
+- [/] Prevent requests without tenantId
 
 ---
 
