@@ -8,6 +8,6 @@ export const validationSchema = Joi.object({
   FRONTEND_URL: Joi.string().uri().required(),
   DATABASE_URL: Joi.string().required(),
   REDIS_URL: Joi.string().required(),
-  CLERK_SECRET_KEY: Joi.string().optional().allow(""),
-  CLERK_JWKS_URL: Joi.string().uri().optional().allow(""),
+  CLERK_SECRET_KEY: Joi.string().required(), // SERVER-SIDE ONLY — never expose to frontend
+  CLERK_JWKS_URL: Joi.string().uri().optional().allow(""), // auto-derived from CLERK_SECRET_KEY; override only for private networks
 });
