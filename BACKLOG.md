@@ -110,9 +110,9 @@ As a developer, I want ORM integration so I can interact with the database.
 
 ### Tasks
 
-- [ ] Install Prisma
-- [ ] Setup Prisma client
-- [ ] Configure database connection
+- [x] Install Prisma
+- [x] Setup Prisma client
+- [x] Configure database connection
 
 ---
 

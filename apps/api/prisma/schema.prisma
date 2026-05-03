@@ -1,0 +1,34 @@
+// Prisma schema — LeaseKo backend
+// https://www.prisma.io/docs/concepts/components/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MODELS
+//
+// Feature 013 (Base Schema Models) will replace _Placeholder with:
+//   - User             (global — no tenantId)
+//   - Tenant           (global — no tenantId)
+//   - TenantMembership (junction — tenantId as FK, not isolation field)
+//
+// Feature 014+ (Business Modules) will add tenant-scoped models:
+//   - Property, Unit, Lease, Payment, MaintenanceRequest, etc.
+//   All must include: tenantId String @map("tenant_id") + @@index([tenantId])
+//   See: docs/tenant-isolation.md
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Infrastructure placeholder — required for Prisma client generation (Prisma 5 requires 1+ model).
+/// Feature 013 will remove this and add real base models (User, Tenant, TenantMembership).
+/// DO NOT reference this model in application code.
+model Placeholder {
+  id Int @id
+
+  @@map("_placeholder")
+}
