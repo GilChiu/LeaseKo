@@ -21,6 +21,7 @@
     "db:reset": "docker compose -f infra/docker-compose.yml --env-file infra/.env.docker down -v",
     "db:generate": "pnpm --filter @leaseKo/api prisma:generate",
     "db:migrate": "pnpm --filter @leaseKo/api prisma:migrate",
+    "db:status": "pnpm --filter @leaseKo/api prisma:migrate:status",
     "db:studio": "pnpm --filter @leaseKo/api prisma:studio",
     "db:validate": "pnpm --filter @leaseKo/api prisma:validate",
     "db:format": "pnpm --filter @leaseKo/api prisma:format"

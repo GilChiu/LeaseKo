@@ -135,9 +135,9 @@ As a developer, I want migrations so schema changes are tracked.
 
 ### Tasks
 
-- [ ] Setup Prisma migrations
-- [ ] Run initial migration
-- [ ] Verify DB schema
+- [x] Setup Prisma migrations
+- [x] Run initial migration
+- [x] Verify DB schema
 
 ---
 
