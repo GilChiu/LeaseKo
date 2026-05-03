@@ -2,6 +2,6 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/010-tenant-isolation-lifecycle/plan.md
+at specs/011-tenant-safe-queries/plan.md
 
 <!-- SPECKIT END -->

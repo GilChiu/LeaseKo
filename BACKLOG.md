@@ -97,8 +97,8 @@ As a developer, I want tenant-safe queries so that data is isolated.
 
 ### Tasks
 
-- [ ] Ensure all queries include tenant_id
-- [ ] Create helper utilities for tenant filtering
+- [x] Ensure all queries include tenant_id
+- [x] Create helper utilities for tenant filtering
 
 ---
 
