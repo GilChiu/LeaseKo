@@ -1,3 +1,14 @@
+# Data Model: Prisma Base Models — User, Tenant, TenantMembership
+
+**Feature**: 013-prisma-base-models
+**Date**: 2026-05-03
+**File**: `apps/api/prisma/schema.prisma`
+
+---
+
+## Complete schema.prisma After This Feature
+
+```prisma
 // Prisma schema — LeaseKo backend
 // https://www.prisma.io/docs/concepts/components/prisma-schema
 
@@ -89,3 +100,102 @@ model TenantMembership {
 //   - Repositories MUST use tenantFilter() from tenant-filter.util.ts
 //   - See: docs/tenant-isolation.md
 // ─────────────────────────────────────────────────────────────────────────────
+```
+
+---
+
+## Entity Summary
+
+### User
+
+| Field | Type | Constraints | DB Column |
+|-------|------|-------------|-----------|
+| `id` | `String` | `@id @default(uuid())` | `id` |
+| `clerkUserId` | `String` | `@unique` | `clerk_user_id` |
+| `email` | `String?` | optional | `email` |
+| `firstName` | `String?` | optional | `first_name` |
+| `lastName` | `String?` | optional | `last_name` |
+| `createdAt` | `DateTime` | `@default(now())` | `created_at` |
+| `updatedAt` | `DateTime` | `@updatedAt` | `updated_at` |
+
+**Table**: `users`
+**Relations**: `memberships TenantMembership[]`
+**Global model** — no `tenantId`. Access via `TenantMembership`.
+
+---
+
+### Tenant
+
+| Field | Type | Constraints | DB Column |
+|-------|------|-------------|-----------|
+| `id` | `String` | `@id @default(uuid())` | `id` |
+| `clerkOrgId` | `String` | `@unique` | `clerk_org_id` |
+| `name` | `String` | required | `name` |
+| `createdAt` | `DateTime` | `@default(now())` | `created_at` |
+| `updatedAt` | `DateTime` | `@updatedAt` | `updated_at` |
+
+**Table**: `tenants`
+**Relations**: `memberships TenantMembership[]`
+**Global model** — identifies the property management organisation.
+
+---
+
+### TenantMembership
+
+| Field | Type | Constraints | DB Column |
+|-------|------|-------------|-----------|
+| `id` | `String` | `@id @default(uuid())` | `id` |
+| `userId` | `String` | FK → `users.id` | `user_id` |
+| `tenantId` | `String` | FK → `tenants.id` | `tenant_id` |
+| `role` | `String` | `@default("member")` | `role` |
+| `createdAt` | `DateTime` | `@default(now())` | `created_at` |
+| `updatedAt` | `DateTime` | `@updatedAt` | `updated_at` |
+
+**Table**: `tenant_memberships`
+**Constraints**: `@@unique([userId, tenantId])`
+**Indexes**: `@@index([tenantId])`, `@@index([userId])`
+**Cascade**: both FK relations use `onDelete: Cascade`
+
+---
+
+## Naming Convention
+
+| Context | Convention | Example |
+|---------|-----------|---------|
+| Prisma field (TS) | `camelCase` | `clerkUserId` |
+| PostgreSQL column | `snake_case` via `@map` | `clerk_user_id` |
+| PostgreSQL table | `snake_case` via `@@map` | `tenant_memberships` |
+
+---
+
+## Index and Constraint Summary
+
+| Model | Constraint/Index | Purpose |
+|-------|-----------------|---------|
+| `User` | `@unique` on `clerkUserId` | Clerk identity lookup; implicit index |
+| `Tenant` | `@unique` on `clerkOrgId` | Clerk org lookup; implicit index |
+| `TenantMembership` | `@@unique([userId, tenantId])` | Prevent duplicate memberships |
+| `TenantMembership` | `@@index([tenantId])` | Fast lookup by tenant |
+| `TenantMembership` | `@@index([userId])` | Fast lookup by user |
+
+---
+
+## Removed
+
+The `Placeholder` model (from Feature 012) is removed in the same schema edit that adds these models.
+The corresponding `_placeholder` table will be dropped by the migration.
+
+---
+
+## Files Modified
+
+| File | Change |
+|------|--------|
+| `apps/api/prisma/schema.prisma` | Remove `Placeholder`, add `User`, `Tenant`, `TenantMembership` |
+
+## Files Created / Updated by This Feature
+
+| File | Change |
+|------|--------|
+| `apps/api/prisma/migrations/*` | Created by `prisma migrate dev` |
+| `docs/data-model.md` | Updated with base model documentation |
