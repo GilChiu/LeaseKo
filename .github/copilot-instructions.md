@@ -2,6 +2,6 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/012-prisma-orm-setup/plan.md
+at specs/013-prisma-base-models/plan.md
 
 <!-- SPECKIT END -->

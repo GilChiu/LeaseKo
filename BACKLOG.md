@@ -122,10 +122,10 @@ As a system, I want base models so data can be structured.
 
 ### Tasks
 
-- [ ] Create User model (clerk_user_id)
-- [ ] Create Tenant model
-- [ ] Add tenant_id fields
-- [ ] Add indexes for tenant_id
+- [x] Create User model (clerk_user_id)
+- [x] Create Tenant model
+- [x] Add tenant_id fields
+- [x] Add indexes for tenant_id
 
 ---
 
