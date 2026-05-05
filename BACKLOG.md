@@ -161,8 +161,8 @@ As a developer, I want clean architecture so code is maintainable.
 
 ### Tasks
 
-- [ ] Create module structure (auth, tenants, common)
-- [ ] Setup domain/application/infrastructure/presentation layers
+- [x] Create module structure (auth, tenants, common)
+- [x] Setup domain/application/infrastructure/presentation layers
 
 ---
 
