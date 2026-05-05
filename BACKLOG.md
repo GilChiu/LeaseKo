@@ -147,9 +147,9 @@ As a system, I want repository abstraction so architecture is clean.
 
 ### Tasks
 
-- [ ] Define repository interfaces
-- [ ] Implement Prisma repositories
-- [ ] Remove direct Prisma usage from services
+- [x] Define repository interfaces
+- [x] Implement Prisma repositories
+- [x] Remove direct Prisma usage from services
 
 ---
 
