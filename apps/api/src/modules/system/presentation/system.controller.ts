@@ -7,9 +7,9 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { Request } from "express";
-import { IRequestContext } from "../../common/types/request-context.type";
-import { ErrorResponseDto } from "../../shared/dto/error-response.dto";
-import { MeResponseDto } from "./presentation/dto/me-response.dto";
+import { IRequestContext } from "../../../common/types/request-context.type";
+import { ErrorResponseDto } from "../../../shared/dto/error-response.dto";
+import { MeResponseDto } from "./dto/me-response.dto";
 
 @ApiTags("System")
 @ApiBearerAuth()
