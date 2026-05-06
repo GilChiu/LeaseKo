@@ -220,8 +220,8 @@ As a developer, I want testing infrastructure.
 
 ### Tasks
 
-- [ ] Setup Jest
-- [ ] Configure test environment
+- [x] Setup Jest
+- [x] Configure test environment
 
 ---
 

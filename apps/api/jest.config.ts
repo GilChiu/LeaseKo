@@ -7,7 +7,15 @@ const config: Config = {
   transform: {
     "^.+\\.(t|j)s$": "ts-jest",
   },
-  collectCoverageFrom: ["**/*.(t|j)s"],
+  collectCoverageFrom: [
+    "**/*.(t|j)s",
+    "!main.ts",
+    "!**/*.module.ts",
+    "!**/*.dto.ts",
+    "!**/*.interface.ts",
+    "!**/*.d.ts",
+    "!**/prisma/**",
+  ],
   coverageDirectory: "../coverage",
   testEnvironment: "node",
   moduleNameMapper: {
