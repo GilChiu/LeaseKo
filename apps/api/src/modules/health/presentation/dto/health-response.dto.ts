@@ -12,4 +12,17 @@ export class HealthResponseDto {
     description: "ISO 8601 UTC timestamp of the response",
   })
   timestamp!: string;
+
+  @ApiProperty({
+    example: 42.37,
+    description: "Process uptime in seconds since the API last started",
+  })
+  uptime!: number;
+
+  @ApiProperty({
+    example: "development",
+    description:
+      "Runtime environment — one of: development, staging, production",
+  })
+  environment!: string;
 }
