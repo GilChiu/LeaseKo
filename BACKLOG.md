@@ -231,8 +231,8 @@ As a developer, I want to validate authentication logic.
 
 ### Tasks
 
-- [ ] Write test for auth guard
-- [ ] Test request context injection
+- [x] Write test for auth guard
+- [x] Test request context injection
 
 ---
 
