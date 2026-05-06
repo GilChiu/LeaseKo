@@ -325,6 +325,81 @@ Use this when moving existing code into the correct layer structure:
 
 ---
 
+## Configuration Management
+
+**Updated**: 2026-05-06 | **Feature**: 017-centralized-config-management
+
+All backend configuration is loaded, validated, and typed in `apps/api/src/common/config/`. No code outside that directory (or `main.ts`) may access `process.env` directly.
+
+### Config Namespaces
+
+| Namespace | Interface | File | Primary Consumer |
+|---|---|---|---|
+| `app` | `AppConfig` | `common/config/app.config.ts` | `main.ts` (port, frontendUrl, nodeEnv) |
+| `database` | `DatabaseConfig` | `common/config/database.config.ts` | Startup validation — Prisma reads `DATABASE_URL` directly via schema |
+| `redis` | `RedisConfig` | `common/config/redis.config.ts` | `QueuesModule` (future BullMQ) |
+| `clerk` | `ClerkConfig` | `common/config/clerk.config.ts` | `ClerkTokenVerifierService` |
+
+### Environment Variable Reference
+
+| Variable | Namespace.Field | Required | Default |
+|---|---|---|---|
+| `NODE_ENV` | `app.nodeEnv` | No | `development` |
+| `PORT` | `app.port` | No | `3001` |
+| `FRONTEND_URL` | `app.frontendUrl` | **Yes** | — |
+| `DATABASE_URL` | `database.url` | **Yes** | — |
+| `REDIS_URL` | `redis.url` | **Yes** | — |
+| `CLERK_SECRET_KEY` | `clerk.secretKey` | **Yes** | — |
+| `CLERK_JWKS_URL` | `clerk.jwksUrl` | No | `undefined` |
+| `CLERK_ISSUER` | `clerk.issuer` | No | `undefined` |
+| `CLERK_AUDIENCE` | `clerk.audience` | No | `undefined` |
+
+### Injection Pattern — New Infrastructure Service
+
+Inject `ConfigService` and access the typed namespace:
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import type { RedisConfig } from '../../../common/config/redis.config';
+
+@Injectable()
+export class MyQueueService {
+  constructor(private readonly config: ConfigService) {}
+
+  private getRedisUrl(): string {
+    return this.config.getOrThrow<string>('redis.url');
+  }
+
+  // Or get the full typed object:
+  private getRedisConfig(): RedisConfig {
+    return this.config.getOrThrow<RedisConfig>('redis');
+  }
+}
+```
+
+### `process.env` Policy
+
+| Location | Rule |
+|---|---|
+| `common/config/*.ts` | **Allowed** — this is the only place `process.env` may appear |
+| `main.ts` | **Allowed via `app.get(ConfigService)`** — after `NestFactory.create()` resolves |
+| Controllers, use cases, domain, repositories | **Forbidden** — use `ConfigService` injection |
+| Test files (`*.spec.ts`) | **Allowed** — test setup is exempt |
+
+Enforcement: `grep -r "process\.env" apps/api/src --include="*.ts"` must return only `common/config/` matches.
+
+### Local Setup
+
+1. Copy `apps/api/.env.example` to `apps/api/.env`
+2. Fill in `CLERK_SECRET_KEY` from [dashboard.clerk.com](https://dashboard.clerk.com) → API Keys
+3. Start Docker: `docker compose -f infra/docker-compose.yml up -d`
+4. Run: `pnpm --filter @leaseKo/api start:dev`
+
+If startup fails with `Config validation error: "CLERK_SECRET_KEY" is required` — the variable is missing from your `.env`. Check the exact variable name and value.
+
+---
+
 ## Validation Checklist
 
 Run before marking any feature complete:
@@ -344,7 +419,7 @@ Run before marking any feature complete:
 
 | Feature | Description |
 |---|---|
-| **017** | Config management — typed `ConfigService` injection across all modules |
+| **017** | Config management — typed `ConfigService` injection across all modules ✅ |
 | **018** | Global exception filter — unit tests + domain-error-to-HTTP mapping |
 | **019** | Swagger documentation coverage — 100% endpoint `@ApiOperation` + DTO `@ApiProperty` |
 | **020** | Testing foundation — Jest unit/integration/e2e separation strategy |

@@ -1,6 +1,9 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { appConfig } from "./common/config/app.config";
+import { databaseConfig } from "./common/config/database.config";
+import { redisConfig } from "./common/config/redis.config";
+import { clerkConfig } from "./common/config/clerk.config";
 import { validationSchema } from "./common/config/validation.schema";
 import { HealthModule } from "./modules/health/health.module";
 import { SystemModule } from "./modules/system/system.module";
@@ -15,7 +18,7 @@ import { QueuesModule } from "./queues/bullmq/bullmq.module";
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig],
+      load: [appConfig, databaseConfig, redisConfig, clerkConfig],
       validationSchema,
       validationOptions: {
         allowUnknown: true,
