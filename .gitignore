@@ -39,3 +39,6 @@ Thumbs.db
 
 # Test coverage
 coverage/
+
+# Test-specific env file (local only — do not commit)
+apps/api/.env.test
