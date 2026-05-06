@@ -9,6 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { CurrentTenant } from "../../../common/decorators/current-tenant.decorator";
 import { RequiresTenant } from "../../../common/decorators/requires-tenant.decorator";
+import { ErrorResponseDto } from "../../../shared/dto/error-response.dto";
 
 @ApiTags("tenant-context")
 @ApiBearerAuth()
@@ -21,8 +22,12 @@ export class TenantContextController {
     description: "Active tenant context.",
     schema: { example: { tenantId: "org_2abc123xyz" } },
   })
-  @ApiUnauthorizedResponse({ description: "Missing or invalid Bearer token." })
+  @ApiUnauthorizedResponse({
+    type: ErrorResponseDto,
+    description: "Missing or invalid Bearer token.",
+  })
   @ApiForbiddenResponse({
+    type: ErrorResponseDto,
     description: "Authenticated but no active organization context.",
   })
   getTenantContext(@CurrentTenant() tenantId: string): { tenantId: string } {
