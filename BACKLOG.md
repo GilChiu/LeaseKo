@@ -207,8 +207,8 @@ As a system, I want a health check endpoint.
 
 ### Tasks
 
-- [ ] Create /health endpoint
-- [ ] Verify API uptime
+- [x] Create /health endpoint
+- [x] Verify API uptime
 
 ---
 
