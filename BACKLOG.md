@@ -183,8 +183,8 @@ As a system, I want proper error handling.
 
 ### Tasks
 
-- [ ] Create global exception filter
-- [ ] Standardize API error responses
+- [x] Create global exception filter
+- [x] Standardize API error responses
 
 ---
 

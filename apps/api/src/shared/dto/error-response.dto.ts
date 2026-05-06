@@ -1,18 +1,31 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
-export class ErrorResponseDto {
-  @ApiProperty({ example: 401, description: "HTTP status code" })
-  statusCode!: number;
+class ApiErrorBodyDto {
+  @ApiProperty({ example: "UNAUTHORIZED" })
+  code!: string;
 
-  @ApiProperty({
-    example: "Unauthorized",
-    description: "Short human-readable description",
-  })
+  @ApiProperty({ example: "Unauthorized" })
   message!: string;
 
+  @ApiProperty({ example: 401 })
+  statusCode!: number;
+
+  @ApiProperty({ example: "2026-05-06T12:00:00.000Z" })
+  timestamp!: string;
+
+  @ApiProperty({ example: "/api/v1/me" })
+  path!: string;
+
   @ApiPropertyOptional({
-    example: "Missing or invalid Bearer token",
-    description: "Additional error detail",
+    description: "Field-level validation details (validation errors only)",
   })
-  error?: string;
+  details?: object;
+}
+
+export class ErrorResponseDto {
+  @ApiProperty({ example: false })
+  success!: false;
+
+  @ApiProperty({ type: ApiErrorBodyDto })
+  error!: ApiErrorBodyDto;
 }
