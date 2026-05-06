@@ -231,20 +231,20 @@ As a developer, I want to validate authentication logic.
 
 ### Tasks
 
-- [ ] Write test for auth guard
-- [ ] Test request context injection
+- [x] Write test for auth guard
+- [x] Test request context injection
 
 ---
 
 # ✅ SPRINT 1 DEFINITION OF DONE
 
-- [ ] Clerk authentication fully working
-- [ ] Backend verifies JWT correctly
-- [ ] Tenant context enforced globally
-- [ ] Prisma connected with base schema
-- [ ] Clean architecture implemented
-- [ ] Swagger documentation available
-- [ ] Local dev environment fully working
+- [x] Clerk authentication fully working
+- [x] Backend verifies JWT correctly
+- [x] Tenant context enforced globally
+- [x] Prisma connected with base schema
+- [x] Clean architecture implemented
+- [x] Swagger documentation available
+- [x] Local dev environment fully working
 
 ---
 
