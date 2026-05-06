@@ -10,4 +10,6 @@ export const validationSchema = Joi.object({
   REDIS_URL: Joi.string().required(),
   CLERK_SECRET_KEY: Joi.string().required(), // SERVER-SIDE ONLY — never expose to frontend
   CLERK_JWKS_URL: Joi.string().uri().optional().allow(""), // auto-derived from CLERK_SECRET_KEY; override only for private networks
+  CLERK_ISSUER: Joi.string().optional().allow(""), // for multi-domain JWT validation
+  CLERK_AUDIENCE: Joi.string().optional().allow(""), // for audience-restricted JWT validation
 });

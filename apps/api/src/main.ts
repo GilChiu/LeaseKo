@@ -1,15 +1,18 @@
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 import { GlobalExceptionFilter } from "./common/filters/global-exception.filter";
+import type { AppConfig } from "./common/config/app.config";
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
-  const port = process.env.PORT ?? 3001;
-  const frontendUrl = process.env.FRONTEND_URL ?? "http://localhost:3000";
+  const configService = app.get(ConfigService);
+  const { port, frontendUrl, nodeEnv } =
+    configService.getOrThrow<AppConfig>("app");
 
   app.setGlobalPrefix("api/v1");
   app.enableCors({ origin: frontendUrl });
@@ -22,7 +25,7 @@ async function bootstrap(): Promise<void> {
     }),
   );
 
-  if (process.env.NODE_ENV !== "production") {
+  if (nodeEnv !== "production") {
     const config = new DocumentBuilder()
       .setTitle("LeaseKo API")
       .setDescription("LeaseKo Property Management SaaS API")
@@ -38,7 +41,7 @@ async function bootstrap(): Promise<void> {
   await app.listen(port);
   // eslint-disable-next-line no-console
   console.log(`API running on http://localhost:${port}`);
-  if (process.env.NODE_ENV !== "production") {
+  if (nodeEnv !== "production") {
     // eslint-disable-next-line no-console
     console.log(`Swagger UI available at http://localhost:${port}/api/docs`);
   }

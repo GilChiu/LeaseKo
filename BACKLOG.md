@@ -172,8 +172,8 @@ As a system, I want consistent config management.
 
 ### Tasks
 
-- [ ] Setup config module
-- [ ] Manage env variables centrally
+- [x] Setup config module
+- [x] Manage env variables centrally
 
 ---
 

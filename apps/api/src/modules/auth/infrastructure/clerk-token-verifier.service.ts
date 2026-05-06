@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { verifyToken } from "@clerk/backend";
+import type { ClerkConfig } from "../../../common/config/clerk.config";
 
 @Injectable()
 export class ClerkTokenVerifierService {
@@ -10,8 +11,11 @@ export class ClerkTokenVerifierService {
     token: string,
   ): Promise<{ userId: string; tenantId: string | null }> {
     try {
+      const clerkConf = this.config.getOrThrow<ClerkConfig>("clerk");
       const payload = await verifyToken(token, {
-        secretKey: this.config.getOrThrow<string>("CLERK_SECRET_KEY"),
+        secretKey: clerkConf.secretKey,
+        ...(clerkConf.issuer && { issuer: clerkConf.issuer }),
+        ...(clerkConf.audience && { audience: clerkConf.audience }),
       });
       if (!payload.sub) {
         throw new UnauthorizedException();
