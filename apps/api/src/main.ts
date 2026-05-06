@@ -27,9 +27,11 @@ async function bootstrap(): Promise<void> {
 
   if (nodeEnv !== "production") {
     const config = new DocumentBuilder()
-      .setTitle("LeaseKo API")
-      .setDescription("LeaseKo Property Management SaaS API")
-      .setVersion("1.0")
+      .setTitle("Property Management SaaS API")
+      .setDescription(
+        "API documentation for the multi-tenant Property Management SaaS backend.",
+      )
+      .setVersion("1.0.0")
       .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, config, {

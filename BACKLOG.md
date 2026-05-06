@@ -196,8 +196,8 @@ As a developer, I want API documentation.
 
 ### Tasks
 
-- [ ] Setup Swagger in NestJS
-- [ ] Document sample endpoints
+- [x] Setup Swagger in NestJS
+- [x] Document sample endpoints
 
 ---
 

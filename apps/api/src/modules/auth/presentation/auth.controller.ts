@@ -9,6 +9,7 @@ import {
 import { CurrentUser } from "../../../common/decorators/current-user.decorator";
 import { UserOnly } from "../../../common/decorators/user-only.decorator";
 import { IRequestContext } from "../../../common/types/request-context.type";
+import { ErrorResponseDto } from "../../../shared/dto/error-response.dto";
 
 @ApiTags("auth")
 @ApiBearerAuth()
@@ -27,7 +28,10 @@ export class AuthController {
       },
     },
   })
-  @ApiUnauthorizedResponse({ description: "Missing or invalid Bearer token." })
+  @ApiUnauthorizedResponse({
+    type: ErrorResponseDto,
+    description: "Missing or invalid Bearer token.",
+  })
   me(
     @CurrentUser() user: IRequestContext,
   ): { userId: string; tenantId: string | null } {
