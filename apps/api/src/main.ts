@@ -16,7 +16,7 @@ async function bootstrap(): Promise<void> {
 
   app.setGlobalPrefix("api/v1");
   app.enableCors({ origin: frontendUrl });
-  app.useGlobalFilters(new GlobalExceptionFilter());
+  app.useGlobalFilters(new GlobalExceptionFilter(nodeEnv));
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
