@@ -44,6 +44,7 @@ model Tenant {
   updatedAt  DateTime @updatedAt @map("updated_at")
 
   memberships TenantMembership[]
+  properties  Property[]
 
   @@map("tenants")
 }
@@ -66,26 +67,28 @@ model TenantMembership {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FUTURE TENANT-SCOPED MODEL PATTERN
-//
-// Every tenant-scoped business model MUST follow this pattern exactly:
-//
-// model Property {
-//   id        String   @id @default(uuid())
-//   tenantId  String   @map("tenant_id")
-//   createdAt DateTime @default(now()) @map("created_at")
-//   updatedAt DateTime @updatedAt @map("updated_at")
-//
-//   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-//
-//   @@index([tenantId])
-//   @@map("properties")
-// }
-//
-// Requirements:
-//   - tenantId is MANDATORY — no exceptions
-//   - @@index([tenantId]) is MANDATORY — for query performance
-//   - tenant relation is MANDATORY — for referential integrity
-//   - Repositories MUST use tenantFilter() from tenant-filter.util.ts
-//   - See: docs/tenant-isolation.md
+// TENANT-SCOPED BUSINESS MODELS
 // ─────────────────────────────────────────────────────────────────────────────
+
+model Property {
+  id           String    @id @default(uuid())
+  tenantId     String    @map("tenant_id")
+  name         String
+  addressLine1 String    @map("address_line_1")
+  addressLine2 String?   @map("address_line_2")
+  city         String
+  state        String?
+  postalCode   String?   @map("postal_code")
+  country      String
+  propertyType String    @map("property_type")
+  description  String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([tenantId, deletedAt])
+  @@map("properties")
+}
