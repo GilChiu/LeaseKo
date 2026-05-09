@@ -13,6 +13,7 @@ import { UsersModule } from "./modules/users/users.module";
 import { TenantContextModule } from "./modules/tenant-context/tenant-context.module";
 import { DatabaseModule } from "./database/prisma/prisma.module";
 import { QueuesModule } from "./queues/bullmq/bullmq.module";
+import { PropertiesModule } from "./modules/properties/properties.module";
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { QueuesModule } from "./queues/bullmq/bullmq.module";
     TenantContextModule,
     DatabaseModule,
     QueuesModule,
+    PropertiesModule,
   ],
 })
 export class AppModule {}

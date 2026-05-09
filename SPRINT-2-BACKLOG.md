@@ -22,9 +22,9 @@ As a landlord, I want to create a property so that I can register properties I m
 - [x] Add tenantId relation to Property
 - [x] Add indexes for tenantId
 - [x] Create Prisma migration for Property model
-- [ ] Define Property domain entity
-- [ ] Define Property repository interface
-- [ ] Implement PrismaPropertyRepository
+- [x] Define Property domain entity
+- [x] Define Property repository interface
+- [x] Implement PrismaPropertyRepository
 - [ ] Create CreateProperty use case
 - [ ] Create CreateProperty DTO
 - [ ] Create POST /properties endpoint
