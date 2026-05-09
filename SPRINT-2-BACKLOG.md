@@ -25,11 +25,11 @@ As a landlord, I want to create a property so that I can register properties I m
 - [x] Define Property domain entity
 - [x] Define Property repository interface
 - [x] Implement PrismaPropertyRepository
-- [ ] Create CreateProperty use case
-- [ ] Create CreateProperty DTO
-- [ ] Create POST /properties endpoint
-- [ ] Add Swagger documentation for create property
-- [ ] Add validation rules for property creation
+- [x] Create CreateProperty use case
+- [x] Create CreateProperty DTO
+- [x] Create POST /properties endpoint
+- [x] Add Swagger documentation for create property
+- [x] Add validation rules for property creation
 - [ ] Add unit tests for CreateProperty use case
 
 ### Acceptance Criteria
