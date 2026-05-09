@@ -30,7 +30,7 @@ As a landlord, I want to create a property so that I can register properties I m
 - [x] Create POST /properties endpoint
 - [x] Add Swagger documentation for create property
 - [x] Add validation rules for property creation
-- [ ] Add unit tests for CreateProperty use case
+- [x] Add unit tests for CreateProperty use case
 
 ### Acceptance Criteria
 
