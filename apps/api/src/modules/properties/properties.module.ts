@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { PROPERTY_REPOSITORY } from './application/repositories/property.repository';
+import { CreatePropertyUseCase } from './application/use-cases/create-property.use-case';
 import { PrismaPropertyRepository } from './infrastructure/repositories/prisma-property.repository';
+import { PropertiesController } from './presentation/properties.controller';
 
 /**
  * PropertiesModule — Bounded context: Property management.
@@ -14,11 +16,13 @@ import { PrismaPropertyRepository } from './infrastructure/repositories/prisma-p
  * - Controllers in this module MUST NOT inject PrismaService or PrismaPropertyRepository.
  */
 @Module({
+  controllers: [PropertiesController],
   providers: [
     {
       provide: PROPERTY_REPOSITORY,
       useClass: PrismaPropertyRepository,
     },
+    CreatePropertyUseCase,
   ],
   exports: [PROPERTY_REPOSITORY],
 })
