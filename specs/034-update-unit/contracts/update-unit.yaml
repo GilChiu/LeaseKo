@@ -1,0 +1,223 @@
+openapi: "3.1.0"
+info:
+  title: LeaseKo API — Update Unit
+  version: "1.0.0"
+  description: Contract for PATCH /units/{id}
+
+paths:
+  /units/{id}:
+    patch:
+      summary: Partially update a unit
+      description: >
+        Updates one or more fields on the specified unit. Only fields included in
+        the request body are modified; omitted fields retain their current values.
+        At least one field must be provided. Optional numeric and text fields may
+        be set to null to clear their stored value. The unit must belong to the
+        authenticated tenant; non-existent and cross-tenant units both return 404.
+        Status-transition rules are not enforced — any valid status may be set freely.
+      operationId: updateUnit
+      tags:
+        - Units
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The globally unique identifier of the unit to update.
+          schema:
+            type: string
+            format: uuid
+            example: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUnitDto"
+            examples:
+              partial_update:
+                summary: Update rent and status only
+                value:
+                  monthlyRent: 18000.00
+                  status: "OCCUPIED"
+              null_clear:
+                summary: Clear optional fields
+                value:
+                  floorArea: null
+                  description: null
+              unit_number_change:
+                summary: Rename unit number
+                value:
+                  unitNumber: "102A"
+      responses:
+        "200":
+          description: Unit updated successfully. Returns full updated unit record.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitResponseDto"
+        "400":
+          description: >
+            Validation error. Causes: empty payload, invalid field values
+            (e.g. negative rent, zero bedrooms, unknown status).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "401":
+          description: Missing or invalid Bearer token.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "403":
+          description: Authenticated but no active organization/tenant context.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "404":
+          description: >
+            Unit not found. Returned for both non-existent units and units belonging
+            to a different tenant — cases are indistinguishable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "409":
+          description: >
+            Conflict — a unit with the same unit number already exists under
+            this property.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "500":
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UpdateUnitDto:
+      type: object
+      description: >
+        All fields are optional. At least one must be provided.
+        Optional numeric and text fields accept null to clear their stored value.
+        unitNumber and status do not accept null.
+        Fields id, tenantId, and propertyId must NOT be included — they are rejected.
+      properties:
+        unitNumber:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: New unit number. Must be unique within the property.
+          example: "102A"
+        floorArea:
+          type: number
+          format: float
+          exclusiveMinimum: 0
+          nullable: true
+          description: Floor area. Positive if provided; null clears the stored value.
+          example: 90.0
+        bedrooms:
+          type: integer
+          minimum: 1
+          nullable: true
+          description: Number of bedrooms (min 1). Null clears the stored value.
+          example: 3
+        bathrooms:
+          type: number
+          format: float
+          exclusiveMinimum: 0
+          nullable: true
+          description: Number of bathrooms. Positive if provided. Null clears the value.
+          example: 2.0
+        monthlyRent:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+          nullable: true
+          description: Monthly rent. Positive if provided. Null clears the value.
+          example: 18000.00
+        description:
+          type: string
+          maxLength: 1000
+          nullable: true
+          description: Free-text description. Null clears the stored value.
+          example: "Updated corner unit."
+        status:
+          type: string
+          enum: [AVAILABLE, OCCUPIED, MAINTENANCE]
+          description: Unit status. Any valid value may be set freely.
+          example: "OCCUPIED"
+
+    UnitResponseDto:
+      type: object
+      required:
+        - id
+        - tenantId
+        - propertyId
+        - unitNumber
+        - status
+        - floorArea
+        - bedrooms
+        - bathrooms
+        - monthlyRent
+        - description
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+        propertyId:
+          type: string
+          format: uuid
+        unitNumber:
+          type: string
+        status:
+          type: string
+          enum: [AVAILABLE, OCCUPIED, MAINTENANCE]
+        floorArea:
+          type: number
+          nullable: true
+        bedrooms:
+          type: integer
+          nullable: true
+        bathrooms:
+          type: number
+          nullable: true
+        monthlyRent:
+          type: number
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ErrorResponseDto:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        error:
+          type: string

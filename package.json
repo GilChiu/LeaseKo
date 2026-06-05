@@ -24,7 +24,9 @@
     "db:status": "pnpm --filter @leaseKo/api prisma:migrate:status",
     "db:studio": "pnpm --filter @leaseKo/api prisma:studio",
     "db:validate": "pnpm --filter @leaseKo/api prisma:validate",
-    "db:format": "pnpm --filter @leaseKo/api prisma:format"
+    "db:format": "pnpm --filter @leaseKo/api prisma:format",
+    "speckit:status": "specify integration list",
+    "speckit:upgrade": "specify integration upgrade claude --script ps"
   },
   "devDependencies": {
     "turbo": "^2.0.0",

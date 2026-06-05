@@ -6,6 +6,8 @@ import { tenantFilter } from '../../../../common/utils/tenant-filter.util';
 import { Property } from '../../domain/entities/property.entity';
 import {
   CreatePropertyInput,
+  FindPagedByTenantOptions,
+  PagedProperties,
   UpdatePropertyInput,
 } from '../../application/types/property-repository.types';
 import { PropertyRepository } from '../../application/repositories/property.repository';
@@ -57,6 +59,27 @@ export class PrismaPropertyRepository implements PropertyRepository {
       orderBy: { createdAt: 'desc' },
     });
     return records.map((r) => this.toEntity(r));
+  }
+
+  async findPagedByTenant(
+    tenantId: string,
+    options: FindPagedByTenantOptions,
+  ): Promise<PagedProperties> {
+    const { page, limit } = options;
+    const skip = (page - 1) * limit;
+    const where = { ...tenantFilter(tenantId), deletedAt: null };
+
+    const [records, total] = await this.prisma.$transaction([
+      this.prisma.property.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.property.count({ where }),
+    ]);
+
+    return { items: records.map((r) => this.toEntity(r)), total };
   }
 
   async findById(id: string, tenantId: string): Promise<Property | null> {

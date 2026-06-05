@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { PROPERTY_REPOSITORY } from './application/repositories/property.repository';
+import { ArchivePropertyUseCase } from './application/use-cases/archive-property.use-case';
 import { CreatePropertyUseCase } from './application/use-cases/create-property.use-case';
+import { GetPropertyByIdUseCase } from './application/use-cases/get-property-by-id.use-case';
+import { ListPropertiesUseCase } from './application/use-cases/list-properties.use-case';
+import { UpdatePropertyUseCase } from './application/use-cases/update-property.use-case';
 import { PrismaPropertyRepository } from './infrastructure/repositories/prisma-property.repository';
 import { PropertiesController } from './presentation/properties.controller';
 
@@ -22,7 +26,11 @@ import { PropertiesController } from './presentation/properties.controller';
       provide: PROPERTY_REPOSITORY,
       useClass: PrismaPropertyRepository,
     },
+    ArchivePropertyUseCase,
     CreatePropertyUseCase,
+    GetPropertyByIdUseCase,
+    ListPropertiesUseCase,
+    UpdatePropertyUseCase,
   ],
   exports: [PROPERTY_REPOSITORY],
 })

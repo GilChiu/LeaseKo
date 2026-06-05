@@ -1,4 +1,6 @@
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, OrganizationSwitcher } from "@clerk/nextjs";
+import { NavLink } from "@/components/nav-link";
+import { TenantSync } from "./_components/tenant-sync";
 
 export default function DashboardLayout({
   children,
@@ -16,9 +18,7 @@ export default function DashboardLayout({
           <span className="px-3 py-2 rounded hover:bg-slate-700 hover:text-white cursor-pointer">
             Dashboard
           </span>
-          <span className="px-3 py-2 rounded hover:bg-slate-700 hover:text-white cursor-pointer">
-            Properties
-          </span>
+          <NavLink href="/properties">Properties</NavLink>
           <span className="px-3 py-2 rounded hover:bg-slate-700 hover:text-white cursor-pointer">
             Units
           </span>
@@ -39,10 +39,16 @@ export default function DashboardLayout({
         {/* Top bar */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center px-6 shrink-0">
           <div className="ml-auto flex items-center gap-4 text-sm text-slate-500">
+            <OrganizationSwitcher
+              hidePersonal
+              afterCreateOrganizationUrl="/properties"
+              afterSelectOrganizationUrl="/properties"
+            />
             <UserButton afterSignOutUrl="/sign-in" />
           </div>
         </header>
 
+        <TenantSync />
         <main className="flex-1 overflow-auto p-6">{children}</main>
       </div>
     </div>

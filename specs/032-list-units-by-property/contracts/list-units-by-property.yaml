@@ -1,0 +1,241 @@
+openapi: "3.1.0"
+info:
+  title: LeaseKo API — List Units by Property
+  version: "1.0.0"
+  description: Contract for GET /properties/{propertyId}/units
+
+paths:
+  /properties/{propertyId}/units:
+    get:
+      summary: List all units under a property
+      description: >
+        Returns a paginated list of units belonging to the specified property.
+        The property must exist, belong to the authenticated tenant, and must not
+        be archived. If the property is accessible but has no units, the response
+        is HTTP 200 with an empty items array. Non-existent, other-tenant, and
+        archived properties all return 404 — indistinguishable to the caller.
+        Results are ordered by unit number ascending (lexicographic).
+      operationId: listUnitsByProperty
+      tags:
+        - Units
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: propertyId
+          in: path
+          required: true
+          description: The unique identifier of the property to list units for.
+          schema:
+            type: string
+            format: uuid
+            example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        - name: page
+          in: query
+          required: false
+          description: Page number (1-based). Default is 1.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: limit
+          in: query
+          required: false
+          description: Items per page. Default is 50. Maximum is 100.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+            example: 50
+      responses:
+        "200":
+          description: >
+            Unit list retrieved successfully. Returns an empty items array with
+            total 0 when the property exists but has no units.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedUnitsResponseDto"
+              examples:
+                with_units:
+                  summary: Property with units
+                  value:
+                    items:
+                      - id: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+                        tenantId: "org_2abc123xyz"
+                        propertyId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                        unitNumber: "101"
+                        status: "AVAILABLE"
+                        floorArea: 75.5
+                        bedrooms: 2
+                        bathrooms: 1.0
+                        monthlyRent: 15000.00
+                        description: "Corner unit"
+                        createdAt: "2026-06-04T10:00:00.000Z"
+                        updatedAt: "2026-06-04T10:00:00.000Z"
+                      - id: "a1b2c3d4-1234-5678-abcd-ef0123456789"
+                        tenantId: "org_2abc123xyz"
+                        propertyId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                        unitNumber: "102"
+                        status: "OCCUPIED"
+                        floorArea: null
+                        bedrooms: 1
+                        bathrooms: 1.0
+                        monthlyRent: 12000.00
+                        description: null
+                        createdAt: "2026-06-04T10:05:00.000Z"
+                        updatedAt: "2026-06-04T10:05:00.000Z"
+                    total: 2
+                    page: 1
+                    limit: 50
+                    hasMore: false
+                empty_property:
+                  summary: Property exists but has no units
+                  value:
+                    items: []
+                    total: 0
+                    page: 1
+                    limit: 50
+                    hasMore: false
+        "400":
+          description: Invalid query parameters (page or limit out of range or non-integer).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "401":
+          description: Missing or invalid Bearer token.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "403":
+          description: Authenticated but no active organization/tenant context.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "404":
+          description: >
+            Property not found. This response is returned for all three cases:
+            property does not exist, property belongs to a different tenant,
+            or property has been archived. The three cases are indistinguishable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "500":
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UnitResponseDto:
+      type: object
+      required:
+        - id
+        - tenantId
+        - propertyId
+        - unitNumber
+        - status
+        - floorArea
+        - bedrooms
+        - bathrooms
+        - monthlyRent
+        - description
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          example: "org_2abc123xyz"
+        propertyId:
+          type: string
+          format: uuid
+        unitNumber:
+          type: string
+          example: "101"
+        status:
+          type: string
+          enum: [AVAILABLE, OCCUPIED, MAINTENANCE]
+        floorArea:
+          type: number
+          format: float
+          nullable: true
+        bedrooms:
+          type: integer
+          nullable: true
+        bathrooms:
+          type: number
+          format: float
+          nullable: true
+        monthlyRent:
+          type: number
+          format: double
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    PaginatedUnitsResponseDto:
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - limit
+        - hasMore
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/UnitResponseDto"
+          description: Units on the current page, ordered by unit number ascending.
+        total:
+          type: integer
+          description: Total number of units for this property (across all pages).
+          example: 12
+        page:
+          type: integer
+          description: Current page number (1-based).
+          example: 1
+        limit:
+          type: integer
+          description: Items per page used for this response.
+          example: 50
+        hasMore:
+          type: boolean
+          description: Whether additional pages exist after this one.
+          example: false
+
+    ErrorResponseDto:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: "Property not found."
+        error:
+          type: string
+          example: "Not Found"

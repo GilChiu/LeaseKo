@@ -1,0 +1,168 @@
+openapi: "3.1.0"
+info:
+  title: LeaseKo API — Get Unit by ID
+  version: "1.0.0"
+  description: Contract for GET /units/{id}
+
+paths:
+  /units/{id}:
+    get:
+      summary: Get a unit by its ID
+      description: >
+        Returns the full unit record for the specified unit ID, scoped to the
+        authenticated tenant. A unit that does not exist and a unit that belongs
+        to a different tenant both return 404 — the two cases are indistinguishable.
+        A malformed or invalid ID string also returns 404. Units have no
+        soft-delete mechanism; there is no archived state.
+      operationId: getUnitById
+      tags:
+        - Units
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The globally unique identifier of the unit.
+          schema:
+            type: string
+            format: uuid
+            example: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+      responses:
+        "200":
+          description: Unit found and returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitResponseDto"
+              example:
+                id: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+                tenantId: "org_2abc123xyz"
+                propertyId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                unitNumber: "101"
+                status: "AVAILABLE"
+                floorArea: 75.5
+                bedrooms: 2
+                bathrooms: 1.0
+                monthlyRent: 15000.00
+                description: "Corner unit with garden view."
+                createdAt: "2026-06-04T10:00:00.000Z"
+                updatedAt: "2026-06-04T10:00:00.000Z"
+        "401":
+          description: Missing or invalid Bearer token.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "403":
+          description: Authenticated but no active organization/tenant context.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "404":
+          description: >
+            Unit not found. Returned for all of: unit does not exist,
+            unit belongs to a different tenant, malformed/invalid unit ID.
+            All cases are indistinguishable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              example:
+                statusCode: 404
+                message: "Unit not found."
+                error: "Not Found"
+        "500":
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UnitResponseDto:
+      type: object
+      required:
+        - id
+        - tenantId
+        - propertyId
+        - unitNumber
+        - status
+        - floorArea
+        - bedrooms
+        - bathrooms
+        - monthlyRent
+        - description
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+        tenantId:
+          type: string
+          example: "org_2abc123xyz"
+        propertyId:
+          type: string
+          format: uuid
+          example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        unitNumber:
+          type: string
+          example: "101"
+        status:
+          type: string
+          enum: [AVAILABLE, OCCUPIED, MAINTENANCE]
+          example: "AVAILABLE"
+        floorArea:
+          type: number
+          format: float
+          nullable: true
+          example: 75.5
+        bedrooms:
+          type: integer
+          nullable: true
+          example: 2
+        bathrooms:
+          type: number
+          format: float
+          nullable: true
+          example: 1.0
+        monthlyRent:
+          type: number
+          format: double
+          nullable: true
+          example: 15000.00
+        description:
+          type: string
+          nullable: true
+          example: "Corner unit with garden view."
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-06-04T10:00:00.000Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2026-06-04T10:00:00.000Z"
+
+    ErrorResponseDto:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: "Unit not found."
+        error:
+          type: string
+          example: "Not Found"

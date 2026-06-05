@@ -1,0 +1,256 @@
+openapi: "3.1.0"
+info:
+  title: Update Unit — Status Lifecycle Extension
+  description: >
+    Extension to the existing PATCH /units/:id endpoint.
+    Adds INACTIVE to the accepted status values and documents the new
+    422 Unprocessable Entity response for invalid status transitions.
+  version: "2.0.0"
+
+paths:
+  /units/{id}:
+    patch:
+      summary: Partially update a unit by its ID
+      description: >
+        Updates one or more fields of the specified unit.
+        When `status` is included, the transition guard evaluates whether
+        the change from the current status to the requested status is permitted.
+        Invalid transitions return 422. INACTIVE is a terminal state — no further
+        status changes are allowed once a unit reaches INACTIVE.
+      tags:
+        - Units
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unit unique identifier (UUID)
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUnitDto"
+            examples:
+              valid_transition:
+                summary: Valid status transition (AVAILABLE → OCCUPIED)
+                value:
+                  status: "OCCUPIED"
+              valid_combined:
+                summary: Status + other fields (MAINTENANCE → AVAILABLE, update rent)
+                value:
+                  status: "AVAILABLE"
+                  monthlyRent: 18000
+              clear_field:
+                summary: Clear description (null) — no status change
+                value:
+                  description: null
+              decommission:
+                summary: Decommission a unit (AVAILABLE → INACTIVE)
+                value:
+                  status: "INACTIVE"
+      responses:
+        "200":
+          description: Unit updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitResponseDto"
+              example:
+                id: "uuid-v4"
+                tenantId: "org_2abc123"
+                propertyId: "uuid-v4"
+                unitNumber: "101"
+                status: "OCCUPIED"
+                floorArea: 75.5
+                bedrooms: 2
+                bathrooms: 1
+                monthlyRent: 18000
+                description: "Corner unit"
+                createdAt: "2026-06-04T10:00:00.000Z"
+                updatedAt: "2026-06-05T09:00:00.000Z"
+        "400":
+          description: >
+            Empty payload, invalid field values, or unrecognised status string.
+            Returned before any business logic runs.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                empty_payload:
+                  value:
+                    statusCode: 400
+                    message: "At least one field must be provided to update a unit."
+                invalid_status_string:
+                  value:
+                    statusCode: 400
+                    message: ["status must be one of the following values: AVAILABLE, OCCUPIED, MAINTENANCE, INACTIVE"]
+        "404":
+          description: >
+            Unit not found or belongs to a different tenant.
+            Both cases are indistinguishable by design (tenant isolation).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              example:
+                statusCode: 404
+                message: "Unit not found."
+        "409":
+          description: Unit number already exists under this property.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              example:
+                statusCode: 409
+                message: "Unit number already exists under this property."
+        "422":
+          description: >
+            Status transition not permitted by lifecycle rules.
+            The requested status value is valid, but the transition from the
+            current status is not allowed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+              examples:
+                invalid_transition:
+                  summary: Attempted illegal transition
+                  value:
+                    statusCode: 422
+                    message: "Unit status cannot transition from OCCUPIED to INACTIVE."
+                terminal_state:
+                  summary: Unit is permanently decommissioned
+                  value:
+                    statusCode: 422
+                    message: "Unit status cannot transition from INACTIVE to AVAILABLE."
+        "401":
+          description: Missing or invalid Bearer token.
+        "403":
+          description: Authenticated but no active organization/tenant context.
+        "500":
+          description: Unexpected server error.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UpdateUnitDto:
+      type: object
+      description: >
+        All fields optional. At least one must be provided.
+        Clearable fields (floorArea, bedrooms, bathrooms, monthlyRent, description)
+        accept null to clear the stored value. status is not clearable.
+      properties:
+        unitNumber:
+          type: string
+          maxLength: 50
+          example: "102"
+        status:
+          type: string
+          enum: [AVAILABLE, OCCUPIED, MAINTENANCE, INACTIVE]
+          example: "OCCUPIED"
+          description: >
+            Lifecycle status. Transitions are enforced:
+            AVAILABLE→{OCCUPIED,MAINTENANCE,INACTIVE},
+            OCCUPIED→{AVAILABLE,MAINTENANCE},
+            MAINTENANCE→{AVAILABLE,INACTIVE},
+            INACTIVE→{} (terminal).
+        floorArea:
+          type: number
+          nullable: true
+          minimum: 0
+          exclusiveMinimum: true
+          example: 85.5
+        bedrooms:
+          type: integer
+          nullable: true
+          minimum: 1
+          example: 2
+        bathrooms:
+          type: number
+          nullable: true
+          minimum: 0
+          exclusiveMinimum: true
+          example: 1.5
+        monthlyRent:
+          type: number
+          nullable: true
+          minimum: 0
+          exclusiveMinimum: true
+          example: 18000.00
+        description:
+          type: string
+          nullable: true
+          maxLength: 1000
+          example: "Renovated corner unit"
+
+    UnitResponseDto:
+      type: object
+      required:
+        - id
+        - tenantId
+        - propertyId
+        - unitNumber
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+        propertyId:
+          type: string
+          format: uuid
+        unitNumber:
+          type: string
+        status:
+          type: string
+          enum: [AVAILABLE, OCCUPIED, MAINTENANCE, INACTIVE]
+        floorArea:
+          type: number
+          nullable: true
+        bedrooms:
+          type: integer
+          nullable: true
+        bathrooms:
+          type: number
+          nullable: true
+        monthlyRent:
+          type: number
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ErrorResponseDto:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        error:
+          type: string
