@@ -14,6 +14,7 @@ import { TenantContextModule } from "./modules/tenant-context/tenant-context.mod
 import { DatabaseModule } from "./database/prisma/prisma.module";
 import { QueuesModule } from "./queues/bullmq/bullmq.module";
 import { PropertiesModule } from "./modules/properties/properties.module";
+import { UnitsModule } from "./modules/units/units.module";
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { PropertiesModule } from "./modules/properties/properties.module";
     DatabaseModule,
     QueuesModule,
     PropertiesModule,
+    UnitsModule,
   ],
 })
 export class AppModule {}

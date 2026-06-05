@@ -1,3 +1,5 @@
+import { Property } from '../../domain/entities/property.entity';
+
 /**
  * Input types for PropertyRepository methods.
  *
@@ -31,4 +33,14 @@ export interface UpdatePropertyInput {
   country?: string;
   propertyType?: string;
   description?: string | null;
+}
+
+export interface FindPagedByTenantOptions {
+  page: number;
+  limit: number;
+}
+
+export interface PagedProperties {
+  items: Property[];
+  total: number;
 }

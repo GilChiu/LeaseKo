@@ -1,0 +1,251 @@
+openapi: "3.1.0"
+info:
+  title: LeaseKo API — Create Unit
+  version: "1.0.0"
+  description: Contract for POST /properties/{propertyId}/units
+
+paths:
+  /properties/{propertyId}/units:
+    post:
+      summary: Create a unit under a property
+      description: >
+        Creates a rentable unit under the specified property. The property must
+        belong to the authenticated tenant and must not be archived. The tenantId
+        on the created unit is derived from the property — it is never accepted
+        from the request body. The unit number must be unique within the property.
+      operationId: createUnit
+      tags:
+        - Units
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: propertyId
+          in: path
+          required: true
+          description: The unique identifier of the property to create the unit under.
+          schema:
+            type: string
+            format: uuid
+            example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUnitDto"
+            examples:
+              minimal:
+                summary: Required fields only
+                value:
+                  unitNumber: "101"
+              full:
+                summary: All fields provided
+                value:
+                  unitNumber: "Penthouse"
+                  floorArea: 150.5
+                  bedrooms: 3
+                  bathrooms: 2.5
+                  monthlyRent: 35000.00
+                  description: "Top-floor penthouse with panoramic views."
+      responses:
+        "201":
+          description: Unit created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnitResponseDto"
+              example:
+                id: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+                tenantId: "org_2abc123xyz"
+                propertyId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                unitNumber: "Penthouse"
+                status: "AVAILABLE"
+                floorArea: 150.5
+                bedrooms: 3
+                bathrooms: 2.5
+                monthlyRent: 35000.00
+                description: "Top-floor penthouse with panoramic views."
+                createdAt: "2026-06-04T10:00:00.000Z"
+                updatedAt: "2026-06-04T10:00:00.000Z"
+        "400":
+          description: Validation error — missing or invalid request body fields.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "401":
+          description: Missing or invalid Bearer token.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "403":
+          description: Authenticated but no active organization/tenant context.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "404":
+          description: >
+            Property not found. This response is returned for all three cases:
+            property does not exist, property belongs to a different tenant,
+            or property has been archived. The three cases are indistinguishable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "409":
+          description: >
+            Conflict — a unit with the same unit number already exists under
+            this property.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+        "500":
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseDto"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateUnitDto:
+      type: object
+      required:
+        - unitNumber
+      properties:
+        unitNumber:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: >
+            Identifier for this unit within the property (e.g. "101", "A", "Penthouse").
+            Must be unique within the property.
+          example: "101"
+        floorArea:
+          type: number
+          format: float
+          exclusiveMinimum: 0
+          nullable: true
+          description: Floor area in the landlord's preferred unit (e.g. sq m or sq ft).
+          example: 85.5
+        bedrooms:
+          type: integer
+          minimum: 1
+          nullable: true
+          description: Number of bedrooms. Must be at least 1 if provided.
+          example: 2
+        bathrooms:
+          type: number
+          format: float
+          exclusiveMinimum: 0
+          nullable: true
+          description: Number of bathrooms. Fractional values (e.g. 1.5) are allowed.
+          example: 1.5
+        monthlyRent:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+          nullable: true
+          description: Monthly rent amount. Must be positive if provided.
+          example: 15000.00
+        description:
+          type: string
+          maxLength: 1000
+          nullable: true
+          description: Optional free-text description of the unit.
+          example: "Corner unit with garden view."
+
+    UnitResponseDto:
+      type: object
+      required:
+        - id
+        - tenantId
+        - propertyId
+        - unitNumber
+        - status
+        - floorArea
+        - bedrooms
+        - bathrooms
+        - monthlyRent
+        - description
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+        tenantId:
+          type: string
+          description: >
+            The tenant that owns this unit. Always derived from the parent property's
+            tenantId — never from the request body.
+          example: "org_2abc123xyz"
+        propertyId:
+          type: string
+          format: uuid
+          example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        unitNumber:
+          type: string
+          example: "101"
+        status:
+          type: string
+          enum:
+            - AVAILABLE
+            - OCCUPIED
+            - MAINTENANCE
+          description: Always AVAILABLE on creation.
+          example: "AVAILABLE"
+        floorArea:
+          type: number
+          format: float
+          nullable: true
+          example: 85.5
+        bedrooms:
+          type: integer
+          nullable: true
+          example: 2
+        bathrooms:
+          type: number
+          format: float
+          nullable: true
+          example: 1.5
+        monthlyRent:
+          type: number
+          format: double
+          nullable: true
+          example: 15000.00
+        description:
+          type: string
+          nullable: true
+          example: "Corner unit with garden view."
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-06-04T10:00:00.000Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2026-06-04T10:00:00.000Z"
+
+    ErrorResponseDto:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: "Property not found."
+        error:
+          type: string
+          example: "Not Found"

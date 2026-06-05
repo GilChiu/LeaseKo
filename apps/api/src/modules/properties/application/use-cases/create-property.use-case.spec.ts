@@ -64,6 +64,7 @@ describe("CreatePropertyUseCase", () => {
   const mockRepo: PropertyRepository = {
     create: jest.fn(),
     findManyByTenant: jest.fn(),
+    findPagedByTenant: jest.fn(),
     findById: jest.fn(),
     update: jest.fn(),
     softDelete: jest.fn(),

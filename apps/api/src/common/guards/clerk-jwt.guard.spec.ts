@@ -2,6 +2,7 @@ import { ExecutionContext, ForbiddenException, UnauthorizedException } from "@ne
 import { Reflector } from "@nestjs/core";
 import { ClerkJwtGuard } from "./clerk-jwt.guard";
 import { VerifyClerkTokenUseCase } from "../../modules/auth/application/verify-clerk-token.use-case";
+import { TenantRepository } from "../../modules/tenants/application/repositories/tenant.repository";
 import { IRequestContext } from "../types/request-context.type";
 
 // ---------------------------------------------------------------------------
@@ -42,13 +43,18 @@ function createMockContext(options: {
 let guard: ClerkJwtGuard;
 let mockReflector: { getAllAndOverride: jest.Mock };
 let mockVerifyClerkToken: { execute: jest.Mock };
+let mockTenantRepository: { findByClerkOrgId: jest.Mock };
+
+const MOCK_INTERNAL_TENANT_ID = "internal-uuid-tenant-123";
 
 beforeEach(() => {
   mockReflector = { getAllAndOverride: jest.fn() };
   mockVerifyClerkToken = { execute: jest.fn() };
+  mockTenantRepository = { findByClerkOrgId: jest.fn() };
   guard = new ClerkJwtGuard(
     mockReflector as unknown as Reflector,
     mockVerifyClerkToken as unknown as VerifyClerkTokenUseCase,
+    mockTenantRepository as unknown as TenantRepository,
   );
 });
 
@@ -60,6 +66,22 @@ function setProtectedRoute(): void {
     .mockReturnValueOnce(false) // IS_PUBLIC_KEY
     .mockReturnValueOnce(false) // IS_USER_ONLY_KEY
     .mockReturnValueOnce(false); // IS_TENANT_REQUIRED_KEY
+}
+
+// Helper: mock a successful tenant resolution for a given clerkOrgId
+function mockTenantFound(clerkOrgId: string): void {
+  mockTenantRepository.findByClerkOrgId.mockResolvedValue({
+    id: MOCK_INTERNAL_TENANT_ID,
+    clerkOrgId,
+    name: "Test Org",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+}
+
+// Helper: mock no tenant record found for a given clerkOrgId
+function mockTenantNotFound(): void {
+  mockTenantRepository.findByClerkOrgId.mockResolvedValue(null);
 }
 
 // ---------------------------------------------------------------------------
@@ -140,13 +162,14 @@ describe("ClerkJwtGuard", () => {
   // Valid token — request.user attachment
   // -------------------------------------------------------------------------
 
-  describe("valid Bearer token", () => {
-    it("returns true and attaches request.user with userId, tenantId and role: null", async () => {
+  describe("valid Bearer token with registered org", () => {
+    it("returns true and attaches request.user with resolved internal tenantId", async () => {
       setProtectedRoute();
       mockVerifyClerkToken.execute.mockResolvedValue({
         userId: "user_test_123",
         tenantId: "org_test_123",
       });
+      mockTenantFound("org_test_123");
       const ctx = createMockContext({ authorization: "Bearer valid-test-token" });
 
       await expect(guard.canActivate(ctx)).resolves.toBe(true);
@@ -154,9 +177,45 @@ describe("ClerkJwtGuard", () => {
       const req = ctx.getRequest() as { user: IRequestContext };
       expect(req.user).toEqual<IRequestContext>({
         userId: "user_test_123",
-        tenantId: "org_test_123",
+        clerkOrgId: "org_test_123",
+        tenantId: MOCK_INTERNAL_TENANT_ID,
         role: null,
       });
+      expect(mockTenantRepository.findByClerkOrgId).toHaveBeenCalledWith("org_test_123");
+    });
+  });
+
+  describe("valid Bearer token with unregistered org", () => {
+    it("resolves tenantId to null when no Tenant row exists for the clerkOrgId", async () => {
+      setProtectedRoute();
+      mockVerifyClerkToken.execute.mockResolvedValue({
+        userId: "user_test_123",
+        tenantId: "org_unregistered",
+      });
+      mockTenantNotFound();
+      const ctx = createMockContext({ authorization: "Bearer valid-test-token" });
+
+      await expect(guard.canActivate(ctx)).resolves.toBe(true);
+
+      const req = ctx.getRequest() as { user: IRequestContext };
+      expect(req.user.tenantId).toBeNull();
+    });
+  });
+
+  describe("valid Bearer token with no active org in JWT", () => {
+    it("skips tenant lookup and sets tenantId to null", async () => {
+      setProtectedRoute();
+      mockVerifyClerkToken.execute.mockResolvedValue({
+        userId: "user_test_123",
+        tenantId: null,
+      });
+      const ctx = createMockContext({ authorization: "Bearer valid-test-token" });
+
+      await expect(guard.canActivate(ctx)).resolves.toBe(true);
+
+      expect(mockTenantRepository.findByClerkOrgId).not.toHaveBeenCalled();
+      const req = ctx.getRequest() as { user: IRequestContext };
+      expect(req.user.tenantId).toBeNull();
     });
   });
 
@@ -176,6 +235,7 @@ describe("ClerkJwtGuard", () => {
       const ctx = createMockContext({ authorization: "Bearer valid-test-token" });
 
       await expect(guard.canActivate(ctx)).resolves.toBe(true);
+      expect(mockTenantRepository.findByClerkOrgId).not.toHaveBeenCalled();
     });
   });
 
@@ -184,7 +244,7 @@ describe("ClerkJwtGuard", () => {
   // -------------------------------------------------------------------------
 
   describe("@RequiresTenant() route", () => {
-    it("throws ForbiddenException when tenantId is null", async () => {
+    it("throws ForbiddenException when JWT has no active org", async () => {
       mockReflector.getAllAndOverride
         .mockReturnValueOnce(false) // IS_PUBLIC_KEY
         .mockReturnValueOnce(false) // IS_USER_ONLY_KEY
@@ -198,7 +258,22 @@ describe("ClerkJwtGuard", () => {
       await expect(guard.canActivate(ctx)).rejects.toThrow(ForbiddenException);
     });
 
-    it("returns true when tenantId is present", async () => {
+    it("throws ForbiddenException when org is not yet registered as a Tenant", async () => {
+      mockReflector.getAllAndOverride
+        .mockReturnValueOnce(false) // IS_PUBLIC_KEY
+        .mockReturnValueOnce(false) // IS_USER_ONLY_KEY
+        .mockReturnValueOnce(true); // IS_TENANT_REQUIRED_KEY
+      mockVerifyClerkToken.execute.mockResolvedValue({
+        userId: "user_test_123",
+        tenantId: "org_unregistered",
+      });
+      mockTenantNotFound();
+      const ctx = createMockContext({ authorization: "Bearer valid-test-token" });
+
+      await expect(guard.canActivate(ctx)).rejects.toThrow(ForbiddenException);
+    });
+
+    it("returns true when org is registered and Tenant record exists", async () => {
       mockReflector.getAllAndOverride
         .mockReturnValueOnce(false) // IS_PUBLIC_KEY
         .mockReturnValueOnce(false) // IS_USER_ONLY_KEY
@@ -207,6 +282,7 @@ describe("ClerkJwtGuard", () => {
         userId: "user_test_123",
         tenantId: "org_test_123",
       });
+      mockTenantFound("org_test_123");
       const ctx = createMockContext({ authorization: "Bearer valid-test-token" });
 
       await expect(guard.canActivate(ctx)).resolves.toBe(true);
@@ -224,6 +300,7 @@ describe("ClerkJwtGuard", () => {
         userId: "user_test_123",
         tenantId: "org_test_123",
       });
+      mockTenantFound("org_test_123");
       const ctx = createMockContext({
         authorization: "Bearer valid-test-token",
         body: { tenantId: "org_evil_456" },
@@ -232,7 +309,7 @@ describe("ClerkJwtGuard", () => {
       await guard.canActivate(ctx);
 
       const req = ctx.getRequest() as { user: IRequestContext };
-      expect(req.user.tenantId).toBe("org_test_123");
+      expect(req.user.tenantId).toBe(MOCK_INTERNAL_TENANT_ID);
     });
 
     it("ignores tenantId in query params — request.user.tenantId comes from JWT only", async () => {
@@ -241,6 +318,7 @@ describe("ClerkJwtGuard", () => {
         userId: "user_test_123",
         tenantId: "org_test_123",
       });
+      mockTenantFound("org_test_123");
       const ctx = createMockContext({
         authorization: "Bearer valid-test-token",
         query: { tenantId: "org_evil_456" },
@@ -249,7 +327,7 @@ describe("ClerkJwtGuard", () => {
       await guard.canActivate(ctx);
 
       const req = ctx.getRequest() as { user: IRequestContext };
-      expect(req.user.tenantId).toBe("org_test_123");
+      expect(req.user.tenantId).toBe(MOCK_INTERNAL_TENANT_ID);
     });
 
     it("ignores tenantId in x-tenant-id header — request.user.tenantId comes from JWT only", async () => {
@@ -258,6 +336,7 @@ describe("ClerkJwtGuard", () => {
         userId: "user_test_123",
         tenantId: "org_test_123",
       });
+      mockTenantFound("org_test_123");
       const ctx = createMockContext({
         authorization: "Bearer valid-test-token",
         extraHeaders: { "x-tenant-id": "org_evil_456" },
@@ -266,7 +345,7 @@ describe("ClerkJwtGuard", () => {
       await guard.canActivate(ctx);
 
       const req = ctx.getRequest() as { user: IRequestContext };
-      expect(req.user.tenantId).toBe("org_test_123");
+      expect(req.user.tenantId).toBe(MOCK_INTERNAL_TENANT_ID);
     });
   });
 });

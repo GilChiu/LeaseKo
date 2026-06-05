@@ -4,8 +4,10 @@ import { ClerkTokenVerifierService } from "./infrastructure/clerk-token-verifier
 import { VerifyClerkTokenUseCase } from "./application/verify-clerk-token.use-case";
 import { ClerkJwtGuard } from "../../common/guards/clerk-jwt.guard";
 import { AuthController } from "./presentation/auth.controller";
+import { TenantsModule } from "../tenants/tenants.module";
 
 @Module({
+  imports: [TenantsModule],
   providers: [
     ClerkTokenVerifierService,
     VerifyClerkTokenUseCase,

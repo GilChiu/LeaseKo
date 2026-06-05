@@ -3,6 +3,8 @@ import { TENANT_REPOSITORY } from "./application/repositories/tenant.repository"
 import { TENANT_MEMBERSHIP_REPOSITORY } from "./application/repositories/tenant-membership.repository";
 import { PrismaTenantRepository } from "./infrastructure/repositories/prisma-tenant.repository";
 import { PrismaTenantMembershipRepository } from "./infrastructure/repositories/prisma-tenant-membership.repository";
+import { SyncTenantUseCase } from "./application/use-cases/sync-tenant.use-case";
+import { TenantsController } from "./presentation/tenants.controller";
 
 /**
  * TenantsModule — Bounded context: Organization / Tenant Management.
@@ -20,6 +22,7 @@ import { PrismaTenantMembershipRepository } from "./infrastructure/repositories/
  * @see docs/data-layer.md
  */
 @Module({
+  controllers: [TenantsController],
   providers: [
     {
       provide: TENANT_REPOSITORY,
@@ -29,6 +32,7 @@ import { PrismaTenantMembershipRepository } from "./infrastructure/repositories/
       provide: TENANT_MEMBERSHIP_REPOSITORY,
       useClass: PrismaTenantMembershipRepository,
     },
+    SyncTenantUseCase,
   ],
   exports: [TENANT_REPOSITORY, TENANT_MEMBERSHIP_REPOSITORY],
 })

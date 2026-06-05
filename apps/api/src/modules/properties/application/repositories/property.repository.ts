@@ -1,6 +1,8 @@
 import { Property } from '../../domain/entities/property.entity';
 import {
   CreatePropertyInput,
+  FindPagedByTenantOptions,
+  PagedProperties,
   UpdatePropertyInput,
 } from '../types/property-repository.types';
 
@@ -36,6 +38,16 @@ export interface PropertyRepository {
    * Records with deletedAt set are excluded automatically.
    */
   findManyByTenant(tenantId: string): Promise<Property[]>;
+
+  /**
+   * Return a paginated slice of active Properties for a tenant, ordered by createdAt DESC.
+   * Excludes soft-deleted records. Uses DB-level skip/take for efficiency.
+   * tenantId MUST come from verified request context — never from client payload.
+   */
+  findPagedByTenant(
+    tenantId: string,
+    options: FindPagedByTenantOptions,
+  ): Promise<PagedProperties>;
 
   /**
    * Find a single active Property by its ID, scoped to a tenant.

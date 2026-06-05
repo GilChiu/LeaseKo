@@ -12,6 +12,7 @@ describe("CurrentUser decorator", () => {
   it("returns the full IRequestContext from request.user", () => {
     const user: IRequestContext = {
       userId: "user_test_123",
+      clerkOrgId: "org_test_123",
       tenantId: "org_test_123",
       role: null,
     };
@@ -29,6 +30,7 @@ describe("CurrentUser decorator", () => {
   it("returns context when tenantId is null", () => {
     const user: IRequestContext = {
       userId: "user_test_123",
+      clerkOrgId: null,
       tenantId: null,
       role: null,
     };

@@ -42,3 +42,6 @@ coverage/
 
 # Test-specific env file (local only — do not commit)
 apps/api/.env.test
+
+# SpecKit integration catalog cache (auto-downloaded, not project config)
+.specify/integrations/.cache/

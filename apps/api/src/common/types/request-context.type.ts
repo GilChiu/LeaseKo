@@ -20,9 +20,16 @@ export interface IRequestContext {
   userId: string;
 
   /**
-   * The tenant the request is scoped to (Clerk organization ID).
-   * Populated from the Clerk JWT `o.id` claim (compact v2 format).
+   * The raw Clerk organization ID from the JWT `o.id` claim.
+   * Required for tenant sync operations that need to upsert a Tenant record.
    * null when no active organization session.
+   */
+  clerkOrgId: string | null;
+
+  /**
+   * The internal Tenant.id (UUID) resolved from clerkOrgId via TenantRepository.
+   * This is the FK value used for all tenant-scoped data isolation queries.
+   * null when no active org session or when the org has no Tenant row yet.
    */
   tenantId: string | null;
 

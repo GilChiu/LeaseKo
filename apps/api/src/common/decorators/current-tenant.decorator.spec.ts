@@ -13,6 +13,7 @@ describe("CurrentTenant decorator", () => {
   it("returns tenantId when present", () => {
     const user: IRequestContext = {
       userId: "user_test_123",
+      clerkOrgId: "org_test_123",
       tenantId: "org_test_123",
       role: null,
     };
@@ -31,6 +32,7 @@ describe("CurrentTenant decorator", () => {
   it("returns null when tenantId is null", () => {
     const user: IRequestContext = {
       userId: "user_test_123",
+      clerkOrgId: null,
       tenantId: null,
       role: null,
     };

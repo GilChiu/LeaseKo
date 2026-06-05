@@ -45,6 +45,7 @@ model Tenant {
 
   memberships TenantMembership[]
   properties  Property[]
+  units       Unit[]
 
   @@map("tenants")
 }
@@ -87,8 +88,43 @@ model Property {
   deletedAt    DateTime? @map("deleted_at")
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  units  Unit[]
 
   @@index([tenantId])
   @@index([tenantId, deletedAt])
   @@map("properties")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIT MODEL
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum UnitStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+  INACTIVE
+}
+
+model Unit {
+  id          String     @id @default(uuid())
+  tenantId    String     @map("tenant_id")
+  propertyId  String     @map("property_id")
+  unitNumber  String     @map("unit_number")
+  status      UnitStatus @default(AVAILABLE)
+  floorArea   Float?     @map("floor_area")
+  bedrooms    Int?
+  bathrooms   Float?
+  monthlyRent Decimal?   @map("monthly_rent") @db.Decimal(12, 2)
+  description String?
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([propertyId, unitNumber])
+  @@index([tenantId])
+  @@index([propertyId])
+  @@map("units")
 }
