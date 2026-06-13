@@ -46,6 +46,8 @@ model Tenant {
   memberships TenantMembership[]
   properties  Property[]
   units       Unit[]
+  contacts    TenantContact[]
+  leases      Lease[]
 
   @@map("tenants")
 }
@@ -89,6 +91,7 @@ model Property {
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   units  Unit[]
+  leases Lease[]
 
   @@index([tenantId])
   @@index([tenantId, deletedAt])
@@ -122,9 +125,75 @@ model Unit {
 
   tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  leases   Lease[]
 
   @@unique([propertyId, unitNumber])
   @@index([tenantId])
   @@index([propertyId])
   @@map("units")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TENANT CONTACT MODEL
+// ─────────────────────────────────────────────────────────────────────────────
+
+model TenantContact {
+  id        String    @id @default(uuid())
+  tenantId  String    @map("tenant_id")
+  firstName String    @map("first_name")
+  lastName  String    @map("last_name")
+  email     String
+  phone     String?
+  idNumber  String?   @map("id_number")
+  notes     String?
+  deletedAt DateTime? @map("deleted_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  leases Lease[]
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+  @@index([tenantId, deletedAt])
+  @@map("tenant_contacts")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LEASE MODEL
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum LeaseStatus {
+  DRAFT
+  ACTIVE
+  EXPIRED
+  TERMINATED
+}
+
+model Lease {
+  id              String      @id @default(uuid())
+  tenantId        String      @map("tenant_id")
+  propertyId      String      @map("property_id")
+  unitId          String      @map("unit_id")
+  tenantContactId String      @map("tenant_contact_id")
+  status          LeaseStatus @default(DRAFT)
+  startDate       DateTime    @map("start_date")
+  endDate         DateTime    @map("end_date")
+  monthlyRent     Decimal     @map("monthly_rent") @db.Decimal(12, 2)
+  depositAmount   Decimal?    @map("deposit_amount") @db.Decimal(12, 2)
+  notes           String?
+  deletedAt       DateTime?   @map("deleted_at")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  tenant        Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  property      Property      @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  unit          Unit          @relation(fields: [unitId], references: [id], onDelete: Restrict)
+  tenantContact TenantContact @relation(fields: [tenantContactId], references: [id], onDelete: Restrict)
+
+  @@index([tenantId])
+  @@index([tenantId, deletedAt])
+  @@index([unitId])
+  @@index([propertyId])
+  @@map("leases")
 }

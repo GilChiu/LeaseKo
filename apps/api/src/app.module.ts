@@ -15,6 +15,8 @@ import { DatabaseModule } from "./database/prisma/prisma.module";
 import { QueuesModule } from "./queues/bullmq/bullmq.module";
 import { PropertiesModule } from "./modules/properties/properties.module";
 import { UnitsModule } from "./modules/units/units.module";
+import { ContactsModule } from "./modules/contacts/contacts.module";
+import { LeasesModule } from "./modules/leases/leases.module";
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { UnitsModule } from "./modules/units/units.module";
     QueuesModule,
     PropertiesModule,
     UnitsModule,
+    ContactsModule,
+    LeasesModule,
   ],
 })
 export class AppModule {}

@@ -1,7 +1,7 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/039-property-detail-units/plan.md
+at specs/043-update-contact-api/plan.md
 <!-- SPECKIT END -->
 
 # LeaseKo — Claude Code Context
