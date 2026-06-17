@@ -55,6 +55,7 @@ describe('GetLeaseByIdUseCase', () => {
     activate: jest.fn(),
     expire: jest.fn(),
     terminate: jest.fn(),
+    hasActiveLeaseForUnit: jest.fn(),
   };
 
   let useCase: GetLeaseByIdUseCase;

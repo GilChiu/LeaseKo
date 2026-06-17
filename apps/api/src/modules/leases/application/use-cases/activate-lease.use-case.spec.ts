@@ -1,4 +1,4 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import {
   ActivateLeaseUseCase,
   ActivateLeaseUseCaseInput,
@@ -56,6 +56,7 @@ describe('ActivateLeaseUseCase', () => {
     activate: jest.fn(),
     expire: jest.fn(),
     terminate: jest.fn(),
+    hasActiveLeaseForUnit: jest.fn(),
   };
 
   let useCase: ActivateLeaseUseCase;
@@ -69,6 +70,7 @@ describe('ActivateLeaseUseCase', () => {
     // TC1 — Happy path: DRAFT → ACTIVE
     it('returns the activated lease when lease is in DRAFT status', async () => {
       (mockRepo.findById as jest.Mock).mockResolvedValueOnce(draftLease);
+      (mockRepo.hasActiveLeaseForUnit as jest.Mock).mockResolvedValueOnce(false);
       (mockRepo.activate as jest.Mock).mockResolvedValueOnce(activatedLease);
 
       const result = await useCase.execute(validInput);
@@ -118,13 +120,15 @@ describe('ActivateLeaseUseCase', () => {
     });
 
     // TC6 — Argument forwarding
-    it('calls findById and activate with exact id and tenantId', async () => {
+    it('calls findById, hasActiveLeaseForUnit, and activate with correct args', async () => {
       (mockRepo.findById as jest.Mock).mockResolvedValueOnce(draftLease);
+      (mockRepo.hasActiveLeaseForUnit as jest.Mock).mockResolvedValueOnce(false);
       (mockRepo.activate as jest.Mock).mockResolvedValueOnce(activatedLease);
 
       await useCase.execute(validInput);
 
       expect(mockRepo.findById).toHaveBeenCalledWith('lease_001', 'tenant_A');
+      expect(mockRepo.hasActiveLeaseForUnit).toHaveBeenCalledWith('unit_001', 'tenant_A');
       expect(mockRepo.activate).toHaveBeenCalledWith('lease_001', 'tenant_A');
       expect(mockRepo.activate).toHaveBeenCalledTimes(1);
     });
@@ -133,9 +137,31 @@ describe('ActivateLeaseUseCase', () => {
     it('propagates unexpected repository errors from activate without swallowing them', async () => {
       const dbError = new Error('DB connection failed');
       (mockRepo.findById as jest.Mock).mockResolvedValueOnce(draftLease);
+      (mockRepo.hasActiveLeaseForUnit as jest.Mock).mockResolvedValueOnce(false);
       (mockRepo.activate as jest.Mock).mockRejectedValueOnce(dbError);
 
       await expect(useCase.execute(validInput)).rejects.toBe(dbError);
+    });
+
+    // TC8 — Unit already occupied: ConflictException
+    it('throws ConflictException when unit already has an active lease', async () => {
+      (mockRepo.findById as jest.Mock).mockResolvedValueOnce(draftLease);
+      (mockRepo.hasActiveLeaseForUnit as jest.Mock).mockResolvedValueOnce(true);
+
+      await expect(useCase.execute(validInput)).rejects.toThrow(ConflictException);
+      expect(mockRepo.activate).not.toHaveBeenCalled();
+    });
+
+    // TC9 — Unit free: activation proceeds
+    it('proceeds with activation when unit has no active lease', async () => {
+      (mockRepo.findById as jest.Mock).mockResolvedValueOnce(draftLease);
+      (mockRepo.hasActiveLeaseForUnit as jest.Mock).mockResolvedValueOnce(false);
+      (mockRepo.activate as jest.Mock).mockResolvedValueOnce(activatedLease);
+
+      const result = await useCase.execute(validInput);
+
+      expect(mockRepo.hasActiveLeaseForUnit).toHaveBeenCalledWith('unit_001', 'tenant_A');
+      expect(result).toEqual(activatedLease);
     });
   });
 });

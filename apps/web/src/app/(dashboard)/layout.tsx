@@ -22,12 +22,8 @@ export default function DashboardLayout({
           <span className="px-3 py-2 rounded hover:bg-slate-700 hover:text-white cursor-pointer">
             Units
           </span>
-          <span className="px-3 py-2 rounded hover:bg-slate-700 hover:text-white cursor-pointer">
-            Tenants
-          </span>
-          <span className="px-3 py-2 rounded hover:bg-slate-700 hover:text-white cursor-pointer">
-            Leases
-          </span>
+          <NavLink href="/tenants">Tenants</NavLink>
+          <NavLink href="/leases">Leases</NavLink>
           <span className="px-3 py-2 rounded hover:bg-slate-700 hover:text-white cursor-pointer">
             Payments
           </span>

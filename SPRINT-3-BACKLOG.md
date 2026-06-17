@@ -278,10 +278,10 @@ As a system, I want occupancy validation so that units cannot have multiple acti
 
 ### Tasks
 
-- [ ] Prevent multiple ACTIVE leases per unit
-- [ ] Add repository validation
-- [ ] Add use case validation
-- [ ] Add unit tests
+- [x] Prevent multiple ACTIVE leases per unit
+- [x] Add repository validation
+- [x] Add use case validation
+- [x] Add unit tests
 
 ### Acceptance Criteria
 
@@ -295,9 +295,9 @@ As a system, I want tenant-safe lease queries so that lease data is isolated.
 
 ### Tasks
 
-- [ ] Implement tenant-scoped lease queries
-- [ ] Add helper utilities
-- [ ] Add tests for cross-tenant access
+- [x] Implement tenant-scoped lease queries
+- [x] Add helper utilities
+- [x] Add tests for cross-tenant access
 
 ### Acceptance Criteria
 
@@ -313,12 +313,12 @@ As a landlord, I want to manage tenant records from the UI.
 
 ### Tasks
 
-- [ ] Create tenant list page
-- [ ] Create create-tenant page
-- [ ] Connect to backend APIs
-- [ ] Add loading states
-- [ ] Add empty states
-- [ ] Add error states
+- [x] Create tenant list page
+- [x] Create create-tenant page
+- [x] Connect to backend APIs
+- [x] Add loading states
+- [x] Add empty states
+- [x] Add error states
 
 ---
 
@@ -328,13 +328,13 @@ As a landlord, I want to create leases from the UI.
 
 ### Tasks
 
-- [ ] Create lease creation page
-- [ ] Tenant selector
-- [ ] Property selector
-- [ ] Unit selector
-- [ ] Lease form
-- [ ] Validation handling
-- [ ] API integration
+- [x] Create lease creation page
+- [x] Tenant selector
+- [x] Property selector
+- [x] Unit selector
+- [x] Lease form
+- [x] Validation handling
+- [x] API integration
 
 ---
 
@@ -344,10 +344,10 @@ As a landlord, I want to view leases from the dashboard.
 
 ### Tasks
 
-- [ ] Create lease list page
-- [ ] Create lease detail page
-- [ ] Add status badges
-- [ ] Add filtering UI
+- [x] Create lease list page
+- [x] Create lease detail page
+- [x] Add status badges
+- [x] Add filtering UI
 
 ---
 

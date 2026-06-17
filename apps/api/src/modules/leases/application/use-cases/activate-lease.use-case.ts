@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
@@ -40,6 +41,13 @@ export class ActivateLeaseUseCase {
       throw new BadRequestException(
         `Lease cannot be activated from status '${lease.status}'.`,
       );
+    }
+    const unitOccupied = await this.leases.hasActiveLeaseForUnit(
+      lease.unitId,
+      input.tenantId,
+    );
+    if (unitOccupied) {
+      throw new ConflictException('Unit already has an active lease.');
     }
     const updated = await this.leases.activate(input.id, input.tenantId);
     if (!updated) {

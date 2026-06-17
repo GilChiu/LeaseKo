@@ -12,6 +12,7 @@ import {
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
@@ -195,6 +196,10 @@ export class LeasesController {
   @ApiBadRequestResponse({
     type: ErrorResponseDto,
     description: 'Lease is not in DRAFT status.',
+  })
+  @ApiConflictResponse({
+    type: ErrorResponseDto,
+    description: 'Unit already has an active lease.',
   })
   @ApiNotFoundResponse({
     type: ErrorResponseDto,

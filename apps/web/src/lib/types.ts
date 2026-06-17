@@ -44,3 +44,48 @@ export interface PagedUnits {
   limit: number;
   hasMore: boolean;
 }
+
+export interface TenantContact {
+  id: string;
+  tenantId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string | null;
+  idNumber: string | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PagedContacts {
+  items: TenantContact[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export type LeaseStatus = "DRAFT" | "ACTIVE" | "EXPIRED" | "TERMINATED";
+
+export interface Lease {
+  id: string;
+  tenantId: string;
+  propertyId: string;
+  unitId: string;
+  tenantContactId: string;
+  status: LeaseStatus;
+  startDate: string;
+  endDate: string;
+  monthlyRent: number;
+  depositAmount: number | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PagedLeases {
+  items: Lease[];
+  total: number;
+  page: number;
+  limit: number;
+}

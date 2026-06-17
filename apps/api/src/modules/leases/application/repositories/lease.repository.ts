@@ -63,4 +63,10 @@ export interface LeaseRepository {
    * Status validation (must be ACTIVE) is the caller's responsibility.
    */
   terminate(id: string, tenantId: string): Promise<Lease | null>;
+
+  /**
+   * Check whether a unit already has a non-deleted ACTIVE lease within the tenant.
+   * Used to enforce the one-active-lease-per-unit invariant before activation.
+   */
+  hasActiveLeaseForUnit(unitId: string, tenantId: string): Promise<boolean>;
 }
