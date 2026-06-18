@@ -16,6 +16,7 @@ import { QueuesModule } from "./queues/bullmq/bullmq.module";
 import { PropertiesModule } from "./modules/properties/properties.module";
 import { UnitsModule } from "./modules/units/units.module";
 import { ContactsModule } from "./modules/contacts/contacts.module";
+import { InvoicesModule } from "./modules/invoices/invoices.module";
 import { LeasesModule } from "./modules/leases/leases.module";
 
 @Module({
@@ -41,6 +42,7 @@ import { LeasesModule } from "./modules/leases/leases.module";
     UnitsModule,
     ContactsModule,
     LeasesModule,
+    InvoicesModule,
   ],
 })
 export class AppModule {}

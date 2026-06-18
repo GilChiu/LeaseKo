@@ -359,11 +359,11 @@ As a developer, I want Lease and Tenant APIs documented.
 
 ### Tasks
 
-- [ ] Swagger tags for Tenant Contacts
-- [ ] Swagger tags for Leases
-- [ ] Document DTOs
-- [ ] Document responses
-- [ ] Document errors
+- [x] Swagger tags for Tenant Contacts
+- [x] Swagger tags for Leases
+- [x] Document DTOs
+- [x] Document responses
+- [x] Document errors
 
 ---
 
@@ -373,31 +373,31 @@ As a developer, I want tenant and lease logic tested.
 
 ### Tasks
 
-- [ ] TenantContact use case tests
-- [ ] Lease use case tests
-- [ ] Lease activation tests
-- [ ] Lease expiration tests
-- [ ] Occupancy validation tests
-- [ ] Cross-tenant access tests
+- [x] TenantContact use case tests
+- [x] Lease use case tests
+- [x] Lease activation tests
+- [x] Lease expiration tests
+- [x] Occupancy validation tests
+- [x] Cross-tenant access tests
 
 ---
 
 # ✅ SPRINT 3 DEFINITION OF DONE
 
-- [ ] Tenant CRM CRUD implemented
-- [ ] Lease CRUD implemented
-- [ ] Tenant assignment to units implemented
-- [ ] Lease activation implemented
-- [ ] Lease expiration implemented
-- [ ] Unit occupancy updates automatically
-- [ ] Multiple active leases prevented
-- [ ] Lease queries tenant-scoped
-- [ ] Tenant queries tenant-scoped
-- [ ] Swagger documentation updated
-- [ ] Frontend tenant screens working
-- [ ] Frontend lease screens working
-- [ ] Tests cover lease lifecycle and tenant isolation
-- [ ] Lint, typecheck, build, and tests pass
+- [x] Tenant CRM CRUD implemented
+- [x] Lease CRUD implemented
+- [x] Tenant assignment to units implemented
+- [x] Lease activation implemented
+- [x] Lease expiration implemented
+- [x] Unit occupancy updates automatically
+- [x] Multiple active leases prevented
+- [x] Lease queries tenant-scoped
+- [x] Tenant queries tenant-scoped
+- [x] Swagger documentation updated
+- [x] Frontend tenant screens working
+- [x] Frontend lease screens working
+- [x] Tests cover lease lifecycle and tenant isolation
+- [x] Lint, typecheck, build, and tests pass
 
 ---
 

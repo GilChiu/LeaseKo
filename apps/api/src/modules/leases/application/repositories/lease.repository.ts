@@ -69,4 +69,10 @@ export interface LeaseRepository {
    * Used to enforce the one-active-lease-per-unit invariant before activation.
    */
   hasActiveLeaseForUnit(unitId: string, tenantId: string): Promise<boolean>;
+
+  /**
+   * Return all non-deleted ACTIVE leases for a tenant.
+   * Used by recurring invoice generation to determine which leases need billing.
+   */
+  findActiveByTenant(tenantId: string): Promise<Lease[]>;
 }

@@ -154,6 +154,13 @@ export class PrismaLeaseRepository implements LeaseRepository {
     }
   }
 
+  async findActiveByTenant(tenantId: string): Promise<Lease[]> {
+    const records = await this.prisma.lease.findMany({
+      where: { ...tenantFilter(tenantId), status: 'ACTIVE', deletedAt: null },
+    });
+    return records.map((r) => this.toEntity(r));
+  }
+
   async hasActiveLeaseForUnit(unitId: string, tenantId: string): Promise<boolean> {
     const count = await this.prisma.lease.count({
       where: {

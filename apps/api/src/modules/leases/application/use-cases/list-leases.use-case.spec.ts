@@ -50,6 +50,7 @@ describe('ListLeasesUseCase', () => {
     expire: jest.fn(),
     terminate: jest.fn(),
     hasActiveLeaseForUnit: jest.fn(),
+    findActiveByTenant: jest.fn(),
   };
 
   let useCase: ListLeasesUseCase;
