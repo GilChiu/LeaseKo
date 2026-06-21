@@ -18,6 +18,9 @@ import { UnitsModule } from "./modules/units/units.module";
 import { ContactsModule } from "./modules/contacts/contacts.module";
 import { InvoicesModule } from "./modules/invoices/invoices.module";
 import { LeasesModule } from "./modules/leases/leases.module";
+import { PaymentsModule } from "./modules/payments/payments.module";
+import { MaintenanceModule } from "./modules/maintenance/maintenance.module";
+import { DashboardModule } from "./modules/dashboard/dashboard.module";
 
 @Module({
   imports: [
@@ -43,6 +46,9 @@ import { LeasesModule } from "./modules/leases/leases.module";
     ContactsModule,
     LeasesModule,
     InvoicesModule,
+    PaymentsModule,
+    MaintenanceModule,
+    DashboardModule,
   ],
 })
 export class AppModule {}

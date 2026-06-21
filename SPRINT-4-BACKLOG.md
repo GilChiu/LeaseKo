@@ -132,27 +132,29 @@ As a landlord, I want to view invoice details.
 
 # 🔵 EPIC 18: Payment Tracking
 
-## User Story 18.1
+## User Story 18.1 ✅
 
 As a landlord, I want to record payments so that rent collection is tracked.
 
+**Completed**: 2026-06-21 | lint ✅ typecheck ✅ build ✅ tests ✅
+
 ### Tasks
 
-- [ ] Create Payment Prisma model
-- [ ] Add tenantId relation
-- [ ] Add invoiceId relation
-- [ ] Create PaymentMethod enum
-- [ ] Create PaymentStatus enum
-- [ ] Create Prisma migration
-- [ ] Define Payment domain entity
-- [ ] Define Payment repository interface
-- [ ] Implement PrismaPaymentRepository
-- [ ] Create RecordPayment use case
-- [ ] Create RecordPayment DTO
-- [ ] Create POST /api/v1/payments endpoint
-- [ ] Add Swagger documentation
-- [ ] Add validation rules
-- [ ] Add tests
+- [x] Create Payment Prisma model
+- [x] Add tenantId relation
+- [x] Add invoiceId relation
+- [x] Create PaymentMethod enum
+- [x] Create PaymentStatus enum
+- [x] Create Prisma migration
+- [x] Define Payment domain entity
+- [x] Define Payment repository interface
+- [x] Implement PrismaPaymentRepository
+- [x] Create RecordPayment use case
+- [x] Create RecordPayment DTO
+- [x] Create POST /api/v1/payments endpoint
+- [x] Add Swagger documentation
+- [x] Add validation rules
+- [x] Add tests
 
 ### PaymentMethod
 
@@ -178,15 +180,17 @@ As a landlord, I want to record payments so that rent collection is tracked.
 
 ---
 
-## User Story 18.2
+## User Story 18.2 ✅
 
 As a landlord, I want invoices marked paid automatically.
 
+**Completed**: 2026-06-21 | Integrated into RecordPaymentUseCase; InvoiceRepository.updateStatus added
+
 ### Tasks
 
-- [ ] Create payment allocation logic
-- [ ] Update invoice status automatically
-- [ ] Add tests
+- [x] Create payment allocation logic
+- [x] Update invoice status automatically
+- [x] Add tests
 
 ### Acceptance Criteria
 
@@ -195,18 +199,20 @@ As a landlord, I want invoices marked paid automatically.
 
 ---
 
-## User Story 18.3
+## User Story 18.3 ✅
 
 As a landlord, I want payment history.
 
+**Completed**: 2026-06-21 | lint ✅ typecheck ✅ build ✅ tests ✅
+
 ### Tasks
 
-- [ ] Create ListPayments use case
-- [ ] Create GET /api/v1/payments endpoint
-- [ ] Add filters
-- [ ] Add pagination
-- [ ] Add Swagger documentation
-- [ ] Add tests
+- [x] Create ListPayments use case
+- [x] Create GET /api/v1/payments endpoint
+- [x] Add filters
+- [x] Add pagination
+- [x] Add Swagger documentation
+- [x] Add tests
 
 ### Acceptance Criteria
 
@@ -217,27 +223,29 @@ As a landlord, I want payment history.
 
 # 🔵 EPIC 19: Maintenance Requests
 
-## User Story 19.1
+## User Story 19.1 ✅
 
 As a tenant manager, I want maintenance tickets so issues can be tracked.
 
+**Completed**: 2026-06-22 | lint ✅ typecheck ✅ build ✅ tests ✅
+
 ### Tasks
 
-- [ ] Create MaintenanceRequest Prisma model
-- [ ] Add tenantId relation
-- [ ] Add propertyId relation
-- [ ] Add unitId relation
-- [ ] Create MaintenanceStatus enum
-- [ ] Create MaintenancePriority enum
-- [ ] Create Prisma migration
-- [ ] Define MaintenanceRequest domain entity
-- [ ] Define repository interface
-- [ ] Implement PrismaMaintenanceRepository
-- [ ] Create CreateMaintenanceRequest use case
-- [ ] Create DTO
-- [ ] Create POST /api/v1/maintenance endpoint
-- [ ] Add Swagger documentation
-- [ ] Add tests
+- [x] Create MaintenanceRequest Prisma model
+- [x] Add tenantId relation
+- [x] Add propertyId relation
+- [x] Add unitId relation
+- [x] Create MaintenanceStatus enum
+- [x] Create MaintenancePriority enum
+- [x] Create Prisma migration
+- [x] Define MaintenanceRequest domain entity
+- [x] Define repository interface
+- [x] Implement PrismaMaintenanceRepository
+- [x] Create CreateMaintenanceRequest use case
+- [x] Create DTO
+- [x] Create POST /api/v1/maintenance endpoint
+- [x] Add Swagger documentation
+- [x] Add tests
 
 ### MaintenanceStatus
 
@@ -255,18 +263,20 @@ As a tenant manager, I want maintenance tickets so issues can be tracked.
 
 ---
 
-## User Story 19.2
+## User Story 19.2 ✅
 
 As a landlord, I want maintenance ticket management.
 
+**Completed**: 2026-06-22 | lint ✅ typecheck ✅ build ✅ tests ✅
+
 ### Tasks
 
-- [ ] Create UpdateMaintenanceStatus use case
-- [ ] Create PATCH /api/v1/maintenance/:id/status endpoint
-- [ ] Create ListMaintenanceRequests use case
-- [ ] Create GET /api/v1/maintenance endpoint
-- [ ] Add filters
-- [ ] Add tests
+- [x] Create UpdateMaintenanceStatus use case
+- [x] Create PATCH /api/v1/maintenance/:id/status endpoint
+- [x] Create ListMaintenanceRequests use case
+- [x] Create GET /api/v1/maintenance endpoint
+- [x] Add filters
+- [x] Add tests
 
 ### Acceptance Criteria
 
@@ -277,16 +287,18 @@ As a landlord, I want maintenance ticket management.
 
 # 🔵 EPIC 20: Dashboard Analytics
 
-## User Story 20.1
+## User Story 20.1 ✅
 
 As a landlord, I want occupancy analytics.
 
+**Completed**: 2026-06-22 | lint ✅ typecheck ✅ build ✅ tests ✅
+
 ### Tasks
 
-- [ ] Create OccupancyMetrics use case
-- [ ] Create GET /api/v1/dashboard/occupancy endpoint
-- [ ] Calculate occupancy rate
-- [ ] Add tests
+- [x] Create OccupancyMetrics use case
+- [x] Create GET /api/v1/dashboard/occupancy endpoint
+- [x] Calculate occupancy rate
+- [x] Add tests
 
 ### Metrics
 
@@ -298,17 +310,19 @@ As a landlord, I want occupancy analytics.
 
 ---
 
-## User Story 20.2
+## User Story 20.2 ✅
 
 As a landlord, I want revenue analytics.
 
+**Completed**: 2026-06-22 | lint ✅ typecheck ✅ build ✅ tests ✅
+
 ### Tasks
 
-- [ ] Create RevenueMetrics use case
-- [ ] Create GET /api/v1/dashboard/revenue endpoint
-- [ ] Calculate monthly revenue
-- [ ] Calculate outstanding balances
-- [ ] Add tests
+- [x] Create RevenueMetrics use case
+- [x] Create GET /api/v1/dashboard/revenue endpoint
+- [x] Calculate monthly revenue
+- [x] Calculate outstanding balances
+- [x] Add tests
 
 ### Metrics
 
@@ -319,73 +333,83 @@ As a landlord, I want revenue analytics.
 
 ---
 
-## User Story 20.3
+## User Story 20.3 ✅
 
 As a landlord, I want dashboard summary cards.
 
+**Completed**: 2026-06-22 | lint ✅ typecheck ✅ build ✅ tests ✅
+
 ### Tasks
 
-- [ ] Create DashboardSummary use case
-- [ ] Create GET /api/v1/dashboard/summary endpoint
-- [ ] Aggregate occupancy + revenue metrics
-- [ ] Add tests
+- [x] Create DashboardSummary use case
+- [x] Create GET /api/v1/dashboard/summary endpoint
+- [x] Aggregate occupancy + revenue metrics
+- [x] Add tests
 
 ---
 
 # 🔵 EPIC 21: Frontend Billing & Maintenance
 
-## User Story 21.1
+## User Story 21.1 ✅
 
 As a landlord, I want invoice management screens.
 
+**Completed**: 2026-06-22 | lint ✅ typecheck ✅ build ✅
+
 ### Tasks
 
-- [ ] Invoice list page
-- [ ] Invoice details page
-- [ ] Create invoice page
-- [ ] Status badges
-- [ ] Filters
-- [ ] API integration
+- [x] Invoice list page
+- [x] Invoice details page
+- [x] Create invoice page
+- [x] Status badges
+- [x] Filters
+- [x] API integration
 
 ---
 
-## User Story 21.2
+## User Story 21.2 ✅
 
 As a landlord, I want payment management screens.
 
+**Completed**: 2026-06-22 | lint ✅ typecheck ✅ build ✅
+
 ### Tasks
 
-- [ ] Payment list page
-- [ ] Record payment form
-- [ ] Payment history view
-- [ ] API integration
+- [x] Payment list page
+- [x] Record payment form
+- [x] Payment history view
+- [x] API integration
 
 ---
 
-## User Story 21.3
+## User Story 21.3 ✅
 
 As a landlord, I want maintenance screens.
 
+**Completed**: 2026-06-22 | lint ✅ typecheck ✅ build ✅
+
 ### Tasks
 
-- [ ] Maintenance list page
-- [ ] Maintenance details page
-- [ ] Create maintenance ticket page
-- [ ] Status workflow UI
-- [ ] API integration
+- [x] Maintenance list page
+- [x] Maintenance details page
+- [x] Create maintenance ticket page
+- [x] Status workflow UI
+- [x] API integration
 
 ---
 
-## User Story 21.4
+## User Story 21.4 ✅
 
 As a landlord, I want analytics dashboards.
 
+**Completed**: 2026-06-22 | lint ✅ typecheck ✅ build ✅ (charts via Recharts)
+
 ### Tasks
 
-- [ ] Dashboard KPI cards
-- [ ] Revenue charts
-- [ ] Occupancy charts
-- [ ] Recent activity widgets
+- [x] Dashboard KPI cards
+- [x] Revenue charts
+- [x] Occupancy charts
+- [x] Recent activity widgets
 
 ---
 
@@ -437,16 +461,16 @@ As a developer, I want billing and maintenance logic tested.
 
 - [x] Invoice CRUD implemented
 - [ ] Recurring invoice generation implemented
-- [ ] Payment tracking implemented
-- [ ] Automatic invoice status updates implemented
-- [ ] Maintenance request workflow implemented
-- [ ] Occupancy analytics implemented
-- [ ] Revenue analytics implemented
-- [ ] Dashboard summary implemented
-- [ ] Frontend invoice screens working
-- [ ] Frontend payment screens working
-- [ ] Frontend maintenance screens working
-- [ ] Dashboard analytics screens working
+- [x] Payment tracking implemented
+- [x] Automatic invoice status updates implemented
+- [x] Maintenance request workflow implemented
+- [x] Occupancy analytics implemented
+- [x] Revenue analytics implemented
+- [x] Dashboard summary implemented
+- [x] Frontend invoice screens working
+- [x] Frontend payment screens working
+- [x] Frontend maintenance screens working
+- [x] Dashboard analytics screens working
 - [ ] Swagger documentation updated
 - [ ] Tests cover billing, maintenance, and analytics
 - [ ] Lint, typecheck, build, and tests pass

@@ -9,24 +9,19 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex h-screen bg-slate-100">
-      {/* Sidebar — Epic 3+: replace with real nav when routes exist */}
+      {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-white flex flex-col p-4 shrink-0">
         <div className="mb-8">
           <span className="text-xl font-bold">LeaseKo</span>
         </div>
         <nav className="flex flex-col gap-1 text-sm text-slate-400">
-          <span className="px-3 py-2 rounded hover:bg-slate-700 hover:text-white cursor-pointer">
-            Dashboard
-          </span>
+          <NavLink href="/dashboard">Dashboard</NavLink>
           <NavLink href="/properties">Properties</NavLink>
-          <span className="px-3 py-2 rounded hover:bg-slate-700 hover:text-white cursor-pointer">
-            Units
-          </span>
           <NavLink href="/tenants">Tenants</NavLink>
           <NavLink href="/leases">Leases</NavLink>
-          <span className="px-3 py-2 rounded hover:bg-slate-700 hover:text-white cursor-pointer">
-            Payments
-          </span>
+          <NavLink href="/invoices">Invoices</NavLink>
+          <NavLink href="/payments">Payments</NavLink>
+          <NavLink href="/maintenance">Maintenance</NavLink>
         </nav>
       </aside>
 

@@ -29,6 +29,7 @@ describe('GetInvoiceByIdUseCase', () => {
     findPagedByTenant: jest.fn(),
     findById: jest.fn(),
     existsByLeaseAndMonth: jest.fn(),
+    updateStatus: jest.fn(),
   };
 
   let useCase: GetInvoiceByIdUseCase;

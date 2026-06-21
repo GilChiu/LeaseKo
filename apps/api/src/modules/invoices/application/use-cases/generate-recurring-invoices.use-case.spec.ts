@@ -63,6 +63,7 @@ describe('GenerateRecurringInvoicesUseCase', () => {
     findPagedByTenant: jest.fn(),
     findById: jest.fn(),
     existsByLeaseAndMonth: jest.fn(),
+    updateStatus: jest.fn(),
   };
 
   const mockLeaseRepo: LeaseRepository = {

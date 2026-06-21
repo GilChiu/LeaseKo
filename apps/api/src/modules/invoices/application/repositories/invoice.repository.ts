@@ -1,4 +1,4 @@
-import { Invoice } from '../../domain/entities/invoice.entity';
+import { Invoice, InvoiceStatus } from '../../domain/entities/invoice.entity';
 import {
   CreateInvoiceInput,
   FindPagedByTenantOptions,
@@ -35,4 +35,10 @@ export interface InvoiceRepository {
     year: number,
     month: number,
   ): Promise<boolean>;
+
+  updateStatus(
+    id: string,
+    tenantId: string,
+    status: InvoiceStatus,
+  ): Promise<Invoice | null>;
 }

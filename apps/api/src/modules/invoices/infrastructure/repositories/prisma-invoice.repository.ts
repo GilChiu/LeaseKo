@@ -103,6 +103,24 @@ export class PrismaInvoiceRepository implements InvoiceRepository {
     return count > 0;
   }
 
+  async updateStatus(
+    id: string,
+    tenantId: string,
+    status: string,
+  ): Promise<Invoice | null> {
+    const record = await this.prisma.invoice.findFirst({
+      where: { id, ...tenantFilter(tenantId), deletedAt: null },
+    });
+    if (!record) return null;
+
+    const updated = await this.prisma.invoice.update({
+      where: { id },
+      data: { status: status as Prisma.InvoiceGetPayload<object>['status'] },
+    });
+
+    return this.toEntity(updated);
+  }
+
   private toEntity(record: PrismaInvoice): Invoice {
     return {
       id: record.id,

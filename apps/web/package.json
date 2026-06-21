@@ -13,7 +13,8 @@
     "@clerk/nextjs": "^5.7.6",
     "next": "^14.0.0",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "recharts": "^2.13.0"
   },
   "devDependencies": {
     "@leaseKo/config": "workspace:*",
