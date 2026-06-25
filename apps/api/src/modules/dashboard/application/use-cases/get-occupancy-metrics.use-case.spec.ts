@@ -86,4 +86,20 @@ describe('GetOccupancyMetricsUseCase', () => {
       'DB connection failed',
     );
   });
+
+  describe('cross-tenant isolation', () => {
+    // Occupancy counts are always scoped to the caller's tenantId.
+    it('scopes the counts to the caller tenant', async () => {
+      (mockRepo.getOccupancyCounts as jest.Mock).mockResolvedValue({
+        totalProperties: 0,
+        totalUnits: 0,
+        occupiedUnits: 0,
+        vacantUnits: 0,
+      });
+
+      await useCase.execute({ tenantId: 'tenant_B' });
+
+      expect(mockRepo.getOccupancyCounts).toHaveBeenCalledWith('tenant_B');
+    });
+  });
 });

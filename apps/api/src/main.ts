@@ -33,6 +33,10 @@ async function bootstrap(): Promise<void> {
       )
       .setVersion("1.0.0")
       .addBearerAuth()
+      .addTag("Invoices", "Create, list, and view tenant invoices")
+      .addTag("Payments", "Record payments and view payment history")
+      .addTag("Maintenance", "Create, list, and update maintenance requests")
+      .addTag("Dashboard", "Occupancy, revenue, and summary analytics")
       .build();
     const document = SwaggerModule.createDocument(app, config, {
       ignoreGlobalPrefix: true,

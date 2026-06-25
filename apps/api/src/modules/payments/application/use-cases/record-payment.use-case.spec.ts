@@ -220,4 +220,42 @@ describe('RecordPaymentUseCase', () => {
       await expect(useCase.execute(baseInput)).rejects.toBe(repoError);
     });
   });
+
+  describe('cross-tenant isolation', () => {
+    // A tenant_B caller paying a tenant_A invoice: the invoice repo is queried
+    // with tenant_B's id and finds nothing, so it is indistinguishable from
+    // not-found — no payment is created and no balance is leaked.
+    it('rejects paying another tenant\'s invoice with NotFoundException', async () => {
+      (mockInvoiceRepo.findById as jest.Mock).mockResolvedValueOnce(null);
+
+      await expect(
+        useCase.execute({ ...baseInput, tenantId: 'tenant_B' }),
+      ).rejects.toThrow(NotFoundException);
+
+      expect(mockInvoiceRepo.findById).toHaveBeenCalledWith('inv_001', 'tenant_B');
+      expect(mockPaymentRepo.getTotalPaidByInvoice).not.toHaveBeenCalled();
+      expect(mockPaymentRepo.create).not.toHaveBeenCalled();
+    });
+
+    it('scopes the balance lookup and create to the caller tenant', async () => {
+      (mockInvoiceRepo.findById as jest.Mock).mockResolvedValueOnce({
+        ...pendingInvoice,
+        tenantId: 'tenant_B',
+      });
+      (mockPaymentRepo.getTotalPaidByInvoice as jest.Mock).mockResolvedValueOnce(0);
+      (mockPaymentRepo.create as jest.Mock).mockResolvedValueOnce({
+        ...completedPayment,
+        tenantId: 'tenant_B',
+      });
+
+      await useCase.execute({ ...baseInput, tenantId: 'tenant_B' });
+
+      expect(mockPaymentRepo.getTotalPaidByInvoice).toHaveBeenCalledWith(
+        'inv_001',
+        'tenant_B',
+      );
+      const createArg = (mockPaymentRepo.create as jest.Mock).mock.calls[0][0];
+      expect(createArg.tenantId).toBe('tenant_B');
+    });
+  });
 });

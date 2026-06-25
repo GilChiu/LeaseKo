@@ -87,4 +87,16 @@ describe('GetRevenueMetricsUseCase', () => {
       useCase.execute({ tenantId: 'tenant_A', year: 2026, month: 6 }),
     ).rejects.toThrow('DB connection failed');
   });
+
+  describe('cross-tenant isolation', () => {
+    // Revenue aggregation is always scoped to the caller's tenantId.
+    it('scopes the aggregation to the caller tenant', async () => {
+      await useCase.execute({ tenantId: 'tenant_B', year: 2026, month: 6 });
+
+      expect(mockRepo.getRevenueAmounts).toHaveBeenCalledWith(
+        'tenant_B',
+        expect.anything(),
+      );
+    });
+  });
 });

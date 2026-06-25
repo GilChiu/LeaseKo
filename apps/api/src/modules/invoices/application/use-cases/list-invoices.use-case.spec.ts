@@ -131,4 +131,19 @@ describe('ListInvoicesUseCase', () => {
       ).rejects.toBe(repoError);
     });
   });
+
+  describe('cross-tenant isolation', () => {
+    // The listing is always scoped to the caller's tenantId.
+    it('scopes the query to the caller tenant', async () => {
+      (mockRepo.findPagedByTenant as jest.Mock).mockResolvedValueOnce({
+        items: [],
+        total: 0,
+      });
+
+      await useCase.execute({ tenantId: 'tenant_B', page: 1, limit: 20 });
+
+      const callArgs = (mockRepo.findPagedByTenant as jest.Mock).mock.calls[0];
+      expect(callArgs[0]).toBe('tenant_B');
+    });
+  });
 });

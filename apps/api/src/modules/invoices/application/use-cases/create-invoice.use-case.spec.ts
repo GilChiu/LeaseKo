@@ -162,4 +162,35 @@ describe('CreateInvoiceUseCase', () => {
       await expect(useCase.execute(baseInput)).rejects.toBe(repoError);
     });
   });
+
+  describe('cross-tenant isolation', () => {
+    // A tenant_B caller invoicing a tenant_A lease: the lease repo is queried
+    // with tenant_B's id and finds nothing → NotFoundException, no invoice made.
+    it('rejects invoicing another tenant\'s lease with NotFoundException', async () => {
+      (mockLeaseRepo.findById as jest.Mock).mockResolvedValueOnce(null);
+
+      await expect(
+        useCase.execute({ ...baseInput, tenantId: 'tenant_B' }),
+      ).rejects.toThrow(NotFoundException);
+
+      expect(mockLeaseRepo.findById).toHaveBeenCalledWith('lease_001', 'tenant_B');
+      expect(mockInvoiceRepo.create).not.toHaveBeenCalled();
+    });
+
+    it('creates the invoice under the caller tenant', async () => {
+      (mockLeaseRepo.findById as jest.Mock).mockResolvedValueOnce({
+        ...activeLease,
+        tenantId: 'tenant_B',
+      });
+      (mockInvoiceRepo.create as jest.Mock).mockResolvedValueOnce({
+        ...baseInvoice,
+        tenantId: 'tenant_B',
+      });
+
+      await useCase.execute({ ...baseInput, tenantId: 'tenant_B' });
+
+      const createArg = (mockInvoiceRepo.create as jest.Mock).mock.calls[0][0];
+      expect(createArg.tenantId).toBe('tenant_B');
+    });
+  });
 });

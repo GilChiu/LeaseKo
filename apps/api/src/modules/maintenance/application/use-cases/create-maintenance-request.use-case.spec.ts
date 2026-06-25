@@ -142,4 +142,25 @@ describe('CreateMaintenanceRequestUseCase', () => {
       }),
     ).rejects.toThrow('DB connection failed');
   });
+
+  describe('cross-tenant isolation', () => {
+    // A tenant_B caller referencing tenant_A's property/unit: the repo FK
+    // validation finds nothing for tenant_B and returns null → NotFoundException.
+    it('rejects another tenant\'s property/unit with NotFoundException', async () => {
+      (mockRepo.create as jest.Mock).mockResolvedValue(null);
+
+      await expect(
+        useCase.execute({
+          tenantId: 'tenant_B',
+          propertyId: 'prop_001',
+          unitId: 'unit_001',
+          title: 'Test',
+          priority: 'LOW',
+        }),
+      ).rejects.toThrow(NotFoundException);
+
+      const createArg = (mockRepo.create as jest.Mock).mock.calls[0][0];
+      expect(createArg.tenantId).toBe('tenant_B');
+    });
+  });
 });

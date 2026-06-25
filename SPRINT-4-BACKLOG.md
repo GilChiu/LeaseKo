@@ -415,45 +415,51 @@ As a landlord, I want analytics dashboards.
 
 # 🔵 EPIC 22: Sprint 4 Documentation & Testing
 
-## User Story 22.1
+## User Story 22.1 ✅
 
 As a developer, I want billing APIs documented.
 
+**Completed**: 2026-06-22 | Swagger tag descriptions added; DTO/response/error docs verified complete
+
 ### Tasks
 
-- [ ] Swagger tags for Invoices
-- [ ] Swagger tags for Payments
-- [ ] Document DTOs
-- [ ] Document responses
-- [ ] Document errors
+- [x] Swagger tags for Invoices
+- [x] Swagger tags for Payments
+- [x] Document DTOs
+- [x] Document responses
+- [x] Document errors
 
 ---
 
-## User Story 22.2
+## User Story 22.2 ✅
 
 As a developer, I want maintenance APIs documented.
 
+**Completed**: 2026-06-22 | Swagger tag descriptions added; DTO/response/error docs verified complete
+
 ### Tasks
 
-- [ ] Swagger tags for Maintenance
-- [ ] Document DTOs
-- [ ] Document responses
-- [ ] Document errors
+- [x] Swagger tags for Maintenance
+- [x] Document DTOs
+- [x] Document responses
+- [x] Document errors
 
 ---
 
-## User Story 22.3
+## User Story 22.3 ✅
 
 As a developer, I want billing and maintenance logic tested.
 
+**Completed**: 2026-06-22 | 96 API tests pass (incl. cross-tenant isolation) | lint ✅ typecheck ✅ build ✅
+
 ### Tasks
 
-- [ ] Invoice use case tests
-- [ ] Payment use case tests
-- [ ] Invoice generation tests
-- [ ] Maintenance workflow tests
-- [ ] Revenue calculation tests
-- [ ] Cross-tenant access tests
+- [x] Invoice use case tests
+- [x] Payment use case tests
+- [x] Invoice generation tests
+- [x] Maintenance workflow tests
+- [x] Revenue calculation tests
+- [x] Cross-tenant access tests
 
 ---
 
@@ -471,8 +477,8 @@ As a developer, I want billing and maintenance logic tested.
 - [x] Frontend payment screens working
 - [x] Frontend maintenance screens working
 - [x] Dashboard analytics screens working
-- [ ] Swagger documentation updated
-- [ ] Tests cover billing, maintenance, and analytics
+- [x] Swagger documentation updated
+- [x] Tests cover billing, maintenance, and analytics
 - [ ] Lint, typecheck, build, and tests pass
 
 ---

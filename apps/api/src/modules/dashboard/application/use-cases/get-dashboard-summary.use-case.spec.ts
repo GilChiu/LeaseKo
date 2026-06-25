@@ -73,4 +73,18 @@ describe('GetDashboardSummaryUseCase', () => {
       'DB connection failed',
     );
   });
+
+  describe('cross-tenant isolation', () => {
+    // The caller's tenantId flows into both sub-use-cases unchanged.
+    it('forwards the caller tenant to both sub-use-cases', async () => {
+      await useCase.execute({ tenantId: 'tenant_B' });
+
+      expect(mockOccupancy.execute).toHaveBeenCalledWith({
+        tenantId: 'tenant_B',
+      });
+      expect(mockRevenue.execute).toHaveBeenCalledWith({
+        tenantId: 'tenant_B',
+      });
+    });
+  });
 });
