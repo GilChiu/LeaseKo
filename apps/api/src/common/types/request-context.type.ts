@@ -34,10 +34,16 @@ export interface IRequestContext {
   tenantId: string | null;
 
   /**
-   * The user's role within the tenant.
-   * Values: 'owner' | 'manager' | 'tenant_user'.
-   * Populated via database lookup (Feature 010+).
-   * null until role resolution is implemented.
+   * The TenantContact.id (UUID) for a tenant-portal (renter) user, resolved
+   * from the active TenantUser account. null for landlord/staff users.
    */
-  role: string | null;
+  tenantContactId: string | null;
+
+  /**
+   * The user's coarse role, resolved by ClerkJwtGuard:
+   * - 'landlord'    — org-derived staff/owner (active Clerk org → Tenant).
+   * - 'tenant_user' — renter with an ACTIVE TenantUser portal account.
+   * - null          — authenticated but neither org nor portal context.
+   */
+  role: 'landlord' | 'tenant_user' | null;
 }

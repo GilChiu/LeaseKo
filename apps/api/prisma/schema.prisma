@@ -51,6 +51,7 @@ model Tenant {
   invoices            Invoice[]
   payments            Payment[]
   maintenanceRequests MaintenanceRequest[]
+  tenantUsers         TenantUser[]
 
   @@map("tenants")
 }
@@ -155,14 +156,49 @@ model TenantContact {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
 
-  tenant   Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  leases   Lease[]
-  invoices Invoice[]
+  tenant     Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  leases     Lease[]
+  invoices   Invoice[]
+  tenantUser TenantUser?
 
   @@unique([tenantId, email])
   @@index([tenantId])
   @@index([tenantId, deletedAt])
   @@map("tenant_contacts")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TENANT PORTAL — TENANT USER (renter login account / invitation)
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum TenantUserStatus {
+  PENDING
+  ACTIVE
+  REVOKED
+}
+
+model TenantUser {
+  id                  String           @id @default(uuid())
+  tenantId            String           @map("tenant_id")
+  tenantContactId     String           @unique @map("tenant_contact_id")
+  email               String
+  clerkUserId         String?          @unique @map("clerk_user_id")
+  status              TenantUserStatus @default(PENDING)
+  invitationToken     String?          @unique @map("invitation_token")
+  invitationExpiresAt DateTime?        @map("invitation_expires_at")
+  activatedAt         DateTime?        @map("activated_at")
+  deletedAt           DateTime?        @map("deleted_at")
+  createdAt           DateTime         @default(now()) @map("created_at")
+  updatedAt           DateTime         @updatedAt @map("updated_at")
+
+  tenant  Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contact TenantContact @relation(fields: [tenantContactId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([tenantId, status])
+  @@index([clerkUserId])
+  @@index([invitationToken])
+  @@map("tenant_users")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

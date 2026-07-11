@@ -33,7 +33,8 @@ class MockClerkGuard implements CanActivate {
       userId: 'user_e2e_001',
       clerkOrgId: 'org_e2e',
       tenantId: activeTenantId,
-      role: 'owner',
+      tenantContactId: null,
+      role: 'landlord',
     };
     return true;
   }

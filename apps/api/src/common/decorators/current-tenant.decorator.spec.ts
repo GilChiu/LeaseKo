@@ -15,6 +15,7 @@ describe("CurrentTenant decorator", () => {
       userId: "user_test_123",
       clerkOrgId: "org_test_123",
       tenantId: "org_test_123",
+      tenantContactId: null,
       role: null,
     };
     const mockRequest = { user };
@@ -34,6 +35,7 @@ describe("CurrentTenant decorator", () => {
       userId: "user_test_123",
       clerkOrgId: null,
       tenantId: null,
+      tenantContactId: null,
       role: null,
     };
     const mockRequest = { user };
