@@ -75,6 +75,48 @@ export class PrismaInvoiceRepository implements InvoiceRepository {
     return { items: records.map((r) => this.toEntity(r)), total };
   }
 
+  async findPagedByTenantContact(
+    tenantId: string,
+    tenantContactId: string,
+    { page, limit, status }: FindPagedByTenantOptions,
+  ): Promise<PagedInvoices> {
+    const skip = (page - 1) * limit;
+    const where = {
+      ...tenantFilter(tenantId),
+      tenantContactId,
+      deletedAt: null,
+      ...(status ? { status } : {}),
+    };
+
+    const [records, total] = await this.prisma.$transaction([
+      this.prisma.invoice.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.invoice.count({ where }),
+    ]);
+
+    return { items: records.map((r) => this.toEntity(r)), total };
+  }
+
+  async sumOutstandingByTenantContact(
+    tenantId: string,
+    tenantContactId: string,
+  ): Promise<number> {
+    const result = await this.prisma.invoice.aggregate({
+      where: {
+        ...tenantFilter(tenantId),
+        tenantContactId,
+        deletedAt: null,
+        status: { in: ['PENDING', 'OVERDUE'] },
+      },
+      _sum: { amount: true },
+    });
+    return result._sum.amount?.toNumber() ?? 0;
+  }
+
   async findById(id: string, tenantId: string): Promise<Invoice | null> {
     const record = await this.prisma.invoice.findFirst({
       where: { id, ...tenantFilter(tenantId), deletedAt: null },

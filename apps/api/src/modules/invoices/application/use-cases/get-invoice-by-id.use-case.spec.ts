@@ -29,6 +29,8 @@ describe('GetInvoiceByIdUseCase', () => {
     findPagedByTenant: jest.fn(),
     findById: jest.fn(),
     existsByLeaseAndMonth: jest.fn(),
+    findPagedByTenantContact: jest.fn(),
+    sumOutstandingByTenantContact: jest.fn(),
     updateStatus: jest.fn(),
   };
 

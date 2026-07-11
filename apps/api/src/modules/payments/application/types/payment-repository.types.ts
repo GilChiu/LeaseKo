@@ -18,6 +18,11 @@ export interface FindPagedByTenantOptions {
   status?: PaymentStatus;
 }
 
+export interface FindPagedByTenantContactOptions {
+  page: number;
+  limit: number;
+}
+
 export interface PagedPayments {
   items: Payment[];
   total: number;

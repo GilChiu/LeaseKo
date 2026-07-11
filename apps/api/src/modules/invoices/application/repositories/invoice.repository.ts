@@ -27,6 +27,27 @@ export interface InvoiceRepository {
     options: FindPagedByTenantOptions,
   ): Promise<PagedInvoices>;
 
+  /**
+   * Return a paginated slice of a single tenant contact's (renter's) non-deleted
+   * invoices, ordered by createdAt DESC, optionally filtered by status.
+   * Used by the tenant portal. tenantId MUST come from verified request context.
+   */
+  findPagedByTenantContact(
+    tenantId: string,
+    tenantContactId: string,
+    options: FindPagedByTenantOptions,
+  ): Promise<PagedInvoices>;
+
+  /**
+   * Sum the amounts of a tenant contact's unpaid invoices (status PENDING or
+   * OVERDUE). Used for the tenant dashboard's outstanding-balance card.
+   * Note: this is invoice-status based; partial payments are not netted here.
+   */
+  sumOutstandingByTenantContact(
+    tenantId: string,
+    tenantContactId: string,
+  ): Promise<number>;
+
   findById(id: string, tenantId: string): Promise<Invoice | null>;
 
   existsByLeaseAndMonth(

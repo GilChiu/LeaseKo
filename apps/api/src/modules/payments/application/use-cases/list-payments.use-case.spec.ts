@@ -28,6 +28,7 @@ describe('ListPaymentsUseCase', () => {
     findPagedByTenant: jest.fn(),
     findById: jest.fn(),
     getTotalPaidByInvoice: jest.fn(),
+    findPagedByTenantContact: jest.fn(),
   };
 
   let useCase: ListPaymentsUseCase;

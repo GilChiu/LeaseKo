@@ -63,6 +63,8 @@ describe('GenerateRecurringInvoicesUseCase', () => {
     findPagedByTenant: jest.fn(),
     findById: jest.fn(),
     existsByLeaseAndMonth: jest.fn(),
+    findPagedByTenantContact: jest.fn(),
+    sumOutstandingByTenantContact: jest.fn(),
     updateStatus: jest.fn(),
   };
 
@@ -75,6 +77,7 @@ describe('GenerateRecurringInvoicesUseCase', () => {
     terminate: jest.fn(),
     hasActiveLeaseForUnit: jest.fn(),
     findActiveByTenant: jest.fn(),
+    findActiveByTenantContact: jest.fn(),
   };
 
   let useCase: GenerateRecurringInvoicesUseCase;

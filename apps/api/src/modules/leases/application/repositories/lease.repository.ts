@@ -75,4 +75,15 @@ export interface LeaseRepository {
    * Used by recurring invoice generation to determine which leases need billing.
    */
   findActiveByTenant(tenantId: string): Promise<Lease[]>;
+
+  /**
+   * Return the current ACTIVE lease for a specific tenant contact (renter), or null.
+   * Used by the tenant portal so a renter can view their own lease. When multiple
+   * ACTIVE leases somehow exist, the most recently created one is returned.
+   * tenantId MUST come from verified request context for workspace isolation.
+   */
+  findActiveByTenantContact(
+    tenantId: string,
+    tenantContactId: string,
+  ): Promise<Lease | null>;
 }

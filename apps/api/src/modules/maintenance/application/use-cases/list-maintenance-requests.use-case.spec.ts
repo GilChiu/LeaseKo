@@ -29,6 +29,8 @@ describe('ListMaintenanceRequestsUseCase', () => {
     findPagedByTenant: jest.fn(),
     findById: jest.fn(),
     updateStatus: jest.fn(),
+    findRecentByUnit: jest.fn(),
+    countActiveByUnit: jest.fn(),
   };
 
   let useCase: ListMaintenanceRequestsUseCase;

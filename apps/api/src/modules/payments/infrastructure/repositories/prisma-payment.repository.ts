@@ -6,6 +6,7 @@ import { PaymentRepository } from '../../application/repositories/payment.reposi
 import { Payment } from '../../domain/entities/payment.entity';
 import {
   CreatePaymentInput,
+  FindPagedByTenantContactOptions,
   FindPagedByTenantOptions,
   PagedPayments,
 } from '../../application/types/payment-repository.types';
@@ -52,6 +53,31 @@ export class PrismaPaymentRepository implements PaymentRepository {
       ...(invoiceId ? { invoiceId } : {}),
       ...(method ? { method } : {}),
       ...(status ? { status } : {}),
+    };
+
+    const [records, total] = await this.prisma.$transaction([
+      this.prisma.payment.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.payment.count({ where }),
+    ]);
+
+    return { items: records.map((r) => this.toEntity(r)), total };
+  }
+
+  async findPagedByTenantContact(
+    tenantId: string,
+    tenantContactId: string,
+    { page, limit }: FindPagedByTenantContactOptions,
+  ): Promise<PagedPayments> {
+    const skip = (page - 1) * limit;
+    const where = {
+      ...tenantFilter(tenantId),
+      deletedAt: null,
+      invoice: { tenantContactId },
     };
 
     const [records, total] = await this.prisma.$transaction([

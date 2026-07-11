@@ -58,6 +58,7 @@ describe('ExpireLeaseUseCase', () => {
     terminate: jest.fn(),
     hasActiveLeaseForUnit: jest.fn(),
     findActiveByTenant: jest.fn(),
+    findActiveByTenantContact: jest.fn(),
   };
 
   let useCase: ExpireLeaseUseCase;

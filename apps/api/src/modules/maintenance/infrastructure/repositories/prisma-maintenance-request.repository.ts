@@ -111,6 +111,30 @@ export class PrismaMaintenanceRequestRepository
     return this.toEntity(updated);
   }
 
+  async findRecentByUnit(
+    tenantId: string,
+    unitId: string,
+    limit: number,
+  ): Promise<MaintenanceRequest[]> {
+    const records = await this.prisma.maintenanceRequest.findMany({
+      where: { ...tenantFilter(tenantId), unitId, deletedAt: null },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+    });
+    return records.map((r) => this.toEntity(r));
+  }
+
+  async countActiveByUnit(tenantId: string, unitId: string): Promise<number> {
+    return this.prisma.maintenanceRequest.count({
+      where: {
+        ...tenantFilter(tenantId),
+        unitId,
+        deletedAt: null,
+        status: { in: ['OPEN', 'IN_PROGRESS'] },
+      },
+    });
+  }
+
   private toEntity(record: PrismaMaintenanceRequest): MaintenanceRequest {
     return {
       id: record.id,

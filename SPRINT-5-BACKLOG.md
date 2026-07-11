@@ -62,68 +62,78 @@ As a tenant, I want secure login.
 
 # 🔵 EPIC 24: Tenant Portal
 
-## User Story 24.1
+## User Story 24.1 ✅
 
 As a tenant, I want to view my lease.
 
+**Completed**: 2026-07-12 | lint ✅ typecheck ✅ build ✅ unit tests ✅ (renter's ACTIVE lease resolved from verified `tenantContactId`; `GET /tenant/lease`, `@TenantPortal()`-gated).
+
 ### Tasks
 
-- [ ] Create GetTenantLease use case
-- [ ] Create GET /tenant/lease endpoint
-- [ ] Add Swagger docs
-- [ ] Add tests
+- [x] Create GetTenantLease use case
+- [x] Create GET /tenant/lease endpoint
+- [x] Add Swagger docs
+- [x] Add tests
 
 ---
 
-## User Story 24.2
+## User Story 24.2 ✅
 
 As a tenant, I want to view invoices.
 
+**Completed**: 2026-07-12 | lint ✅ typecheck ✅ build ✅ unit tests ✅ (scoped by `tenantContactId`; `GET /tenant/invoices` with page/limit + status filter).
+
 ### Tasks
 
-- [ ] Create ListTenantInvoices use case
-- [ ] Create GET /tenant/invoices endpoint
-- [ ] Add filters
-- [ ] Add tests
+- [x] Create ListTenantInvoices use case
+- [x] Create GET /tenant/invoices endpoint
+- [x] Add filters
+- [x] Add tests
 
 ---
 
-## User Story 24.3
+## User Story 24.3 ✅
 
 As a tenant, I want to view payment history.
 
+**Completed**: 2026-07-12 | lint ✅ typecheck ✅ build ✅ unit tests ✅ (payments resolved via the renter's invoices so only own payments are visible; `GET /tenant/payments`).
+
 ### Tasks
 
-- [ ] Create ListTenantPayments use case
-- [ ] Create GET /tenant/payments endpoint
-- [ ] Add tests
+- [x] Create ListTenantPayments use case
+- [x] Create GET /tenant/payments endpoint
+- [x] Add tests
 
 ---
 
-## User Story 24.4
+## User Story 24.4 ✅
 
 As a tenant, I want to submit maintenance requests.
 
+**Completed**: 2026-07-12 | lint ✅ typecheck ✅ build ✅ unit tests ✅ (unit/property derived from the renter's ACTIVE lease server-side — never from the body). Photo upload deferred to Epic 25, which owns storage integration (mirrors Epic 23 deferring email to Epic 26).
+
 ### Tasks
 
-- [ ] Create POST /tenant/maintenance endpoint
-- [ ] Restrict maintenance to assigned unit
-- [ ] Upload maintenance photos
-- [ ] Add tests
+- [x] Create POST /tenant/maintenance endpoint
+- [x] Restrict maintenance to assigned unit
+- [ ] Upload maintenance photos → **deferred to Epic 25 (storage integration)**
+- [x] Add tests
 
 ---
 
-## User Story 24.5
+## User Story 24.5 ✅
 
 As a tenant, I want a dashboard.
 
+**Completed**: 2026-07-12 | lint ✅ typecheck ✅ build ✅ unit tests ✅ (`GET /tenant/dashboard` composes lease + outstanding balance + recent payments + unit-scoped maintenance). Delivered as the backend summary API; the renter UI cards/widgets live in Epic 28 (Frontend Tenant Portal).
+
 ### Tasks
 
-- [ ] Dashboard summary
-- [ ] Current lease card
-- [ ] Outstanding balance card
-- [ ] Recent payments
-- [ ] Maintenance status widget
+- [x] Dashboard summary
+- [x] Current lease card (API)
+- [x] Outstanding balance card (API)
+- [x] Recent payments (API)
+- [x] Maintenance status widget (API)
 
 ---
 
@@ -311,11 +321,11 @@ As a developer, I want comprehensive testing.
 # ✅ SPRINT 5 DEFINITION OF DONE
 
 - [x] Tenant authentication implemented
-- [ ] Tenant portal fully functional
-- [ ] Tenant can view lease
-- [ ] Tenant can view invoices
-- [ ] Tenant can view payments
-- [ ] Tenant can submit maintenance requests
+- [x] Tenant portal fully functional (backend API; UI in Epic 28)
+- [x] Tenant can view lease
+- [x] Tenant can view invoices
+- [x] Tenant can view payments
+- [x] Tenant can submit maintenance requests
 - [ ] Lease documents uploaded and downloadable
 - [ ] Notification system implemented
 - [ ] Automatic invoice reminders working

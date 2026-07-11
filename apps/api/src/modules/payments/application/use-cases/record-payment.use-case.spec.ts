@@ -58,6 +58,7 @@ describe('RecordPaymentUseCase', () => {
     findPagedByTenant: jest.fn(),
     findById: jest.fn(),
     getTotalPaidByInvoice: jest.fn(),
+    findPagedByTenantContact: jest.fn(),
   };
 
   const mockInvoiceRepo: InvoiceRepository = {
@@ -65,6 +66,8 @@ describe('RecordPaymentUseCase', () => {
     findPagedByTenant: jest.fn(),
     findById: jest.fn(),
     existsByLeaseAndMonth: jest.fn(),
+    findPagedByTenantContact: jest.fn(),
+    sumOutstandingByTenantContact: jest.fn(),
     updateStatus: jest.fn(),
   };
 
